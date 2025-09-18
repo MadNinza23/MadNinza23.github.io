@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walif's Portfolio Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles & Variables */
+        :root {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --accent: #4a8eff;
+            --accent-light: #6ba2ff;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --transition: all 0.5s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Landing Page */
+        #landing {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .tagline {
+            margin-bottom: 3rem;
+            max-width: 600px;
+            color: var(--text-secondary);
+        }
+
+        .explore-btn {
+            padding: 1rem 2.5rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(74, 142, 255, 0.3);
+        }
+
+        .explore-btn:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(74, 142, 255, 0.5);
+        }
+
+        /* Main Content Area */
+        #content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-img {
+            height: 200px;
+            background-color: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 3rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .card-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .card-link i {
+            margin-left: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .card-link:hover {
+            color: var(--accent-light);
+        }
+
+        .card-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* About Section */
+        #about {
+            margin-bottom: 4rem;
+        }
+
+        .about-content {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-text {
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-category {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .skill-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .skill-list {
+            list-style-type: none;
+        }
+
+        .skill-list li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .skill-list li:before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Contact Section */
+        #contact {
+            margin-bottom: 4rem;
+        }
+
+        .contact-content {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .contact-text {
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: #2a2a2a;
+            border-radius: 50%;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #landing {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .explore-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .social-links {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(18, 18, 18, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        nav.visible {
+            transform: translateY(0);
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #0a0a0a;
+            color: var(--text-secondary);
+            margin-top: 4rem;
+        }
+
+        /* Animation for content */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <section id="landing">
+        <div class="logo">Walif</div>
+        <p class="tagline">Content Creator & Editor | Bringing ideas to life through visual storytelling</p>
+        <button class="explore-btn" id="exploreBtn">Explore</button>
+    </section>
+
+    <!-- Navigation -->
+    <nav id="nav">
+        <div class="nav-logo">Walif</div>
+        <div class="nav-links">
+            <a href="#projects" class="nav-link">Projects</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="content">
+        <!-- Projects Section -->
+        <section id="projects">
+            <h2 class="section-title fade-in">My Projects</h2>
+            <div class="projects-grid">
+                <!-- Project Card 1 -->
+                <div class="project-card fade-in">
+                    <div class="card-img">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Time Conversion Tool</h3>
+                        <p class="card-desc">A utility for converting between different time zones and formats with a clean UI.</p>
+                        <a href="#" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card fade-in">
+                    <div class="card-img">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Video Editing Portfolio</h3>
+                        <p class="card-desc">A collection of my best video editing work for various clients and projects.</p>
+                        <a href="#" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="project-card fade-in">
+                    <div class="card-img">
+                        <i class="fas fa-photo-video"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Content Creation Series</h3>
+                        <p class="card-desc">A series of social media content packages created for brand campaigns.</p>
+                        <a href="#" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Project Card 4 -->
+                <div class="project-card fade-in">
+                    <div class="card-img">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Short Film Project</h3>
+                        <p class="card-desc">A personally directed and edited short film showcasing storytelling techniques.</p>
+                        <a href="#" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Project Card 5 -->
+                <div class="project-card fade-in">
+                    <div class="card-img">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Motion Graphics Reel</h3>
+                        <p class="card-desc">A demonstration of motion graphics and animation skills across various projects.</p>
+                        <a href="#" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Project Card 6 -->
+                <div class="project-card fade-in">
+                    <div class="card-img">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Photography Portfolio</h3>
+                        <p class="card-desc">A selection of my best photography work across different genres and styles.</p>
+                        <a href="#" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2 class="section-title fade-in">About Me</h2>
+            <div class="about-content fade-in">
+                <p class="about-text">
+                    Hello everyone, thank you for allowing me to introduce myself. My name is <span class="highlight">Walif Mohian</span>. I am 18 years old and I'm from Sylhet,Bangladesh. I am a content creator and editor passionate about video editing and creating engaging digital experiences.
+                </p>
+                <p class="about-text">
+                    With a keen eye for detail and a creative mindset, I specialize in producing content that resonates with audiences and communicates messages effectively through various media formats.
+                </p>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills">
+            <h2 class="section-title fade-in">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category fade-in">
+                    <h3 class="skill-title">Content Creation</h3>
+                    <ul class="skill-list">
+                        <li>Video Production</li>
+                        <li>Photo Editing</li>
+                        <li>Storyboarding</li>
+                        <li>Content Strategy</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category fade-in">
+                    <h3 class="skill-title">Video Editing</h3>
+                    <ul class="skill-list">
+                        <li>Adobe Premiere Pro</li>
+                        <li>Final Cut Pro</li>
+                        <li>Color Grading</li>
+                        <li>Motion Graphics</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category fade-in">
+                    <h3 class="skill-title">Other Skills</h3>
+                    <ul class="skill-list">
+                        <li>Photography</li>
+                        <li>Graphic Design</li>
+                        <li>Social Media Management</li>
+                        <li>Creative Direction</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2 class="section-title fade-in">Contact Me</h2>
+            <div class="contact-content fade-in">
+                <p class="contact-text">Feel free to reach out for collaborations or just to say hello!</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 WALIF MOHIAN All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Explore button functionality
+        document.getElementById('exploreBtn').addEventListener('click', function() {
+            document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Navigation show/hide
+        const nav = document.getElementById('nav');
+        const landing = document.getElementById('landing');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > landing.offsetHeight / 2) {
+                nav.classList.add('visible');
+            } else {
+                nav.classList.remove('visible');
+            }
+            
+            // Check if elements are in viewport for animation
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        });
+
+        // Initialize fade-in elements check on page load
+        window.addEventListener('load', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
