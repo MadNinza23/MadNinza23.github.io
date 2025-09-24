@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker by h1m</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3a0ca3;
+      --accent: #4cc9f0;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4ade80;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray: #6c757d;
+      --gray-light: #e9ecef;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    .dark-theme {
+      --primary: #8b5cf6;      
+      --primary-light: #a78bfa;
+      --secondary: #1e1b2e;     
+      --accent: #7c3aed;        
+      --light: #1a1a1a;         
+      --dark: #f5f5f5;          
+      --success: #cccccc;       
+      --warning: #d1d5db;       
+      --danger: #e5e7eb;        
+      --gray: #9ca3af;          
+      --gray-light: #2a2a2a;   
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      transition: var(--transition);
+    }
+
+    .dark-theme {
+      background: black;
+      color: #f5f5f5;
+    }
+
+    .dark-theme body {
+      background: black;
+      color: #f5f5f5;
+    }
+
+    .navbar {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 25px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      border-radius: var(--radius) var(--radius) 0 0;
+      box-shadow: var(--shadow);
+      margin-bottom: 0;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(30deg);
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .dark-theme .container {
+      background: var(--light);
+    }
+
+    .balance-card {
+      background: white;
+      margin: 15px 25px 25px;
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .dark-theme .balance-card {
+      background: var(--gray-light);
+    }
+
+    .balance-card h3 {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .balance-card h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 25px 25px;
+      gap: 15px;
+    }
+
+    .summary-item {
+      flex: 1;
+      padding: 15px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .dark-theme .summary-item {
+      background: var(--gray-light);
+    }
+
+    .income-summary {
+      background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+    }
+
+    .dark-theme .income-summary {
+      background: linear-gradient(to right, #2a3a2f, #1a2a1f);
+    }
+
+    .expense-summary {
+      background: linear-gradient(to right, #ffebee, #ffcdd2);
+    }
+
+    .dark-theme .expense-summary {
+      background: linear-gradient(to right, #3a2a2f, #2a1a1f);
+    }
+
+    .summary-item h4 {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 5px;
+    }
+
+    .summary-item p {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .income-summary p {
+      color: var(--success);
+    }
+
+    .expense-summary p {
+      color: var(--danger);
+    }
+
+    .form-container {
+      padding: 0 25px 25px;
+    }
+
+    .transaction-type {
+      display: flex;
+      margin-bottom: 15px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .type-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: var(--gray-light);
+      color: var(--gray);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .dark-theme .type-btn {
+      background: #333;
+    }
+
+    .type-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .type-btn:first-child {
+      border-right: 1px solid #ddd;
+    }
+
+    .dark-theme .type-btn:first-child {
+      border-right: 1px solid #444;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: var(--transition);
+      background: white;
+      color: var(--dark);
+    }
+
+    .dark-theme .form-group input {
+      background: var(--gray-light);
+      border-color: #444;
+      color: var(--dark);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .dark-theme .form-group input:focus {
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+    }
+
+    .dark-theme .submit-btn:hover {
+      box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .search-container {
+      padding: 0 25px 15px;
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      background: white;
+      color: var(--dark);
+    }
+
+    .dark-theme .search-container input {
+      background: var(--gray-light);
+      border-color: #444;
+      color: var(--dark);
+    }
+
+    .search-container input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .dark-theme .search-container input:focus {
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+    }
+
+    .history-section {
+      padding: 0 25px 25px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .history-header h4 {
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+
+    .clear-btn {
+      background: var(--gray-light);
+      color: var(--gray);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dark-theme .clear-btn {
+      background: #333;
+    }
+
+    .clear-btn:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .transaction-list {
+      list-style: none;
+      max-height: 250px;
+      overflow-y: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: white;
+      transition: var(--transition);
+    }
+
+    .dark-theme .transaction-list {
+      background: var(--gray-light);
+    }
+
+    .transaction-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .transaction-list::-webkit-scrollbar-thumb {
+      background: var(--gray-light);
+      border-radius: 10px;
+    }
+
+    .dark-theme .transaction-list::-webkit-scrollbar-thumb {
+      background: var(--primary);
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: var(--transition);
+    }
+
+    .dark-theme .transaction-item {
+      border-bottom: 1px solid #444;
+    }
+
+    .transaction-item:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-item:hover {
+      background: #f9f9f9;
+    }
+
+    .dark-theme .transaction-item:hover {
+      background: #333;
+    }
+
+    .transaction-info {
+      flex: 1;
+    }
+
+    .transaction-info strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--dark);
+    }
+
+    .transaction-info small {
+      color: var(--gray);
+      font-size: 0.8rem;
+    }
+
+    .transaction-amount {
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .income-amount {
+      color: var(--success);
+    }
+
+    .expense-amount {
+      color: var(--danger);
+    }
+
+    .transaction-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      transition: var(--transition);
+      color: var(--gray);
+    }
+
+    .edit-btn:hover {
+      background: var(--warning);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .chart-container {
+      padding: 0 25px 25px;
+      text-align: center;
+    }
+
+    .chart-container h4 {
+      margin-bottom: 15px;
+      color: var(--dark);
+    }
+
+    .chart-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 12px 20px;
+      }
+      
+      .navbar-brand {
+        font-size: 1.3rem;
+      }
+      
+      .container {
+        max-width: 100%;
+      }
+      
+      .balance-card, .summary, .form-container, .search-container, .history-section, .chart-container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      
+      .balance-card {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      
+      .summary {
+        flex-direction: column;
+      }
+      
+      .balance-card h2 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <i class="fas fa-wallet"></i> Expense Tracker
+    </div>
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+    </button>
+  </nav>
+
+  <div class="container">
+    <div class="balance-card">
+      <h3>Your Balance</h3>
+      <h2 id="balance">$0.00</h2>
+    </div>
+
+    <div class="summary">
+      <div class="summary-item income-summary">
+        <h4>Income</h4>
+        <p id="income">+$0.00</p>
+      </div>
+      <div class="summary-item expense-summary">
+        <h4>Expense</h4>
+        <p id="expense">-$0.00</p>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <div class="transaction-type">
+        <button class="type-btn active" id="incomeBtn" type="button">
+          <i class="fas fa-arrow-down"></i> Income
+        </button>
+        <button class="type-btn" id="expenseBtn" type="button">
+          <i class="fas fa-arrow-up"></i> Expense
+        </button>
+      </div>
+
+      <form id="form">
+        <div class="form-group">
+          <input type="text" id="text" placeholder="Enter description" required>
+        </div>
+        <div class="form-group">
+          <input type="number" id="amount" placeholder="Enter amount" required>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-plus-circle"></i> Add Transaction
+        </button>
+      </form>
+    </div>
+
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search transactions...">
+    </div>
+
+    <div class="history-section">
+      <div class="history-header">
+        <h4>Transaction History</h4>
+        <button class="clear-btn" onclick="clearAll()">
+          <i class="fas fa-trash"></i> Clear All
+        </button>
+      </div>
+      <ul id="list" class="transaction-list"></ul>
+    </div>
+
+    <div class="chart-container">
+      <h4>Income vs Expense</h4>
+      <div class="chart-wrapper">
+        <canvas id="chart" width="200" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const balance = document.getElementById('balance');
+    const income = document.getElementById('income');
+    const expense = document.getElementById('expense');
+    const list = document.getElementById('list');
+    const form = document.getElementById('form');
+    const text = document.getElementById('text');
+    const amount = document.getElementById('amount');
+    const search = document.getElementById('search');
+    const chart = document.getElementById('chart').getContext('2d');
+    const incomeBtn = document.getElementById('incomeBtn');
+    const expenseBtn = document.getElementById('expenseBtn');
+    const themeToggle = document.getElementById('themeToggle');
+
+    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    let editId = null;
+    let isIncome = true;
+    let isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+
+    // Set initial theme
+    if (isDarkTheme) {
+      document.documentElement.classList.add('dark-theme');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark-theme');
+      isDarkTheme = document.documentElement.classList.contains('dark-theme');
+      localStorage.setItem('darkTheme', isDarkTheme);
+      
+      if (isDarkTheme) {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      } else {
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      }
+      
+      // Update chart colors
+      updateValues();
+    });
+
+    // Toggle between income and expense
+    incomeBtn.addEventListener('click', () => {
+      isIncome = true;
+      incomeBtn.classList.add('active');
+      expenseBtn.classList.remove('active');
+      amount.placeholder = "Enter amount";
+    });
+
+    expenseBtn.addEventListener('click', () => {
+      isIncome = false;
+      expenseBtn.classList.add('active');
+      incomeBtn.classList.remove('active');
+      amount.placeholder = "Enter amount";
+    });
+
+    // Add transaction
+    function addTransaction(e) {
+      e.preventDefault();
+
+      if (text.value.trim() === '' || amount.value.trim() === '') {
+        alert('Please add text and amount');
+        return;
+      }
+
+      // Determine amount sign based on selection
+      const amountValue = isIncome ? Math.abs(amount.value) : -Math.abs(amount.value);
+
+      if (editId) {
+        // Editing existing transaction
+        transactions = transactions.map(t =>
+          t.id === editId ? { ...t, text: text.value, amount: +amountValue } : t
+        );
+        editId = null;
+      } else {
+        // New transaction
+        const transaction = {
+          id: Date.now(),
+          text: text.value,
+          amount: +amountValue,
+          date: new Date().toLocaleDateString()
+        };
+        transactions.push(transaction);
+      }
+
+      updateLocalStorage();
+      init();
+      form.reset();
+    }
+
+    // Add transaction to DOM
+    function addTransactionDOM(transaction) {
+      const sign = transaction.amount < 0 ? '-' : '+';
+      const item = document.createElement('li');
+      item.classList.add('transaction-item');
+      
+      item.innerHTML = `
+        <div class="transaction-info">
+          <strong>${transaction.text}</strong>
+          <small>${transaction.date}</small>
+        </div>
+        <div>
+          <span class="transaction-amount ${transaction.amount < 0 ? 'expense-amount' : 'income-amount'}">
+            ${sign}${Math.abs(transaction.amount).toFixed(2)}
+          </span>
+          <div class="transaction-actions">
+            <button class="action-btn edit-btn" onclick="editTransaction(${transaction.id})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="action-btn delete-btn" onclick="removeTransaction(${transaction.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      list.appendChild(item);
+    }
+
+    // Update balance, income, expense
+    function updateValues() {
+      const amounts = transactions.map(t => t.amount);
+      const total = amounts.reduce((acc, num) => acc + num, 0).toFixed(2);
+      const inc = amounts.filter(num => num > 0).reduce((acc, num) => acc + num, 0).toFixed(2);
+      const exp = amounts.filter(num => num < 0).reduce((acc, num) => acc + num, 0).toFixed(2);
+
+      balance.innerText = `${total}`;
+		income.innerText = `+${inc}`;
+		expense.innerText = `-${Math.abs(exp)}`;
+
+      drawChart(+inc, Math.abs(exp));
+    }
+
+    // Draw pie chart
+    function drawChart(income, expense) {
+      const total = income + expense;
+      chart.clearRect(0, 0, 200, 200);
+      if (total === 0) return;
+
+      const incomeAngle = (income / total) * 2 * Math.PI;
+
+      // Income slice
+      chart.beginPath();
+      chart.moveTo(100, 100);
+      chart.arc(100, 100, 80, 0, incomeAngle);
+      chart.fillStyle = isDarkTheme ? '#cccccc' : '#4ade80';
+      chart.fill();
+
+      // Expense slice
+      chart.beginPath();
+      chart.moveTo(100, 100);
+      chart.arc(100, 100, 80, incomeAngle, 2 * Math.PI);
+      chart.fillStyle = isDarkTheme ? '#9ca3af' : '#ef4444';
+      chart.fill();
+    }
+
+    // Remove transaction
+    function removeTransaction(id) {
+      transactions = transactions.filter(t => t.id !== id);
+      updateLocalStorage();
+      init();
+    }
+
+    // Edit transaction
+    function editTransaction(id) {
+      const transaction = transactions.find(t => t.id === id);
+      text.value = transaction.text;
+      amount.value = Math.abs(transaction.amount);
+      
+      // Set the correct transaction type
+      if (transaction.amount > 0) {
+        isIncome = true;
+        incomeBtn.classList.add('active');
+        expenseBtn.classList.remove('active');
+      } else {
+        isIncome = false;
+        expenseBtn.classList.add('active');
+        incomeBtn.classList.remove('active');
+      }
+      
+      editId = id;
+    }
+
+    // Search filter
+    search.addEventListener('input', () => {
+      const keyword = search.value.toLowerCase();
+      const filtered = transactions.filter(t =>
+        t.text.toLowerCase().includes(keyword)
+      );
+      renderList(filtered);
+    });
+
+    // Clear all
+    function clearAll() {
+      if (confirm("Are you sure you want to clear everything?")) {
+        transactions = [];
+        updateLocalStorage();
+        init();
+      }
+    }
+
+    // Update local storage
+    function updateLocalStorage() {
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+    }
+
+    // Init app
+    function init() {
+      list.innerHTML = '';
+      transactions.forEach(addTransactionDOM);
+      updateValues();
+    }
+
+    function renderList(data) {
+      list.innerHTML = '';
+      data.forEach(addTransactionDOM);
+    }
+
+    init();
+    form.addEventListener('submit', addTransaction);
+  </script>
+</body>
+</html>
