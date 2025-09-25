@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed Test by h1m</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;      
+            --primary-light: #a78bfa;
+            --secondary: #1e1b2e;     
+            --accent: #7c3aed;        
+            --light: #1a1a1a;         
+            --dark: #f5f5f5;          
+            --success: #10b981;       
+            --warning: #f59e0b;       
+            --danger: #ef4444;        
+            --gray: #9ca3af;          
+            --gray-light: #2a2a2a;   
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .light-theme {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--light);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        button.secondary {
+            background-color: var(--gray);
+        }
+
+        button.secondary:hover {
+            background-color: var(--gray-light);
+            color: var(--dark);
+        }
+
+        select, input {
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-light);
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .test-container {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--gray-light);
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .typing-area {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        #text-display {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            min-height: 150px;
+            padding: 1.5rem;
+            background-color: var(--gray-light);
+            border-radius: var(--radius);
+            overflow-wrap: break-word;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: text;
+            user-select: none;
+        }
+
+        .word {
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .letter {
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .correct {
+            color: var(--success);
+        }
+
+        .incorrect {
+            color: var(--danger);
+            text-decoration: underline;
+        }
+
+        .current {
+            background-color: rgba(139, 92, 246, 0.1);
+            border-radius: 4px;
+        }
+
+        /* Mobile-friendly input field */
+        #text-input {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            cursor: text;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .results {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: none;
+            transition: var(--transition);
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .result-card {
+            background-color: var(--gray-light);
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .error-analysis {
+            margin-top: 1.5rem;
+        }
+
+        .error-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .countdown {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 8rem;
+            color: white;
+            display: none;
+        }
+
+        .countdown.active {
+            display: flex;
+        }
+
+        .history-panel {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: none;
+            max-height: 70vh;
+            overflow-y: auto;
+            transition: var(--transition);
+        }
+
+        .history-panel.active {
+            display: block;
+        }
+
+        .history-item {
+            background-color: var(--gray-light);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .history-stat {
+            text-align: center;
+            padding: 0.5rem;
+            background-color: var(--light);
+            border-radius: var(--radius);
+        }
+
+        .history-value {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--light);
+            margin-top: auto;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 1rem;
+            }
+            
+            .test-container, .results, .history-panel {
+                padding: 1rem;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            #text-display {
+                font-size: 1rem;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .countdown {
+                font-size: 5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats, .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .countdown {
+                font-size: 4rem;
+            }
+            
+            .history-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="logo">Typing Speed Test</div>
+        <div class="controls">
+            <select id="timer-mode">
+                <option value="30">Time: 30s</option>
+                <option value="60">Time: 60s</option>
+                <option value="120">Time: 120s</option>
+                <option value="50">Words: 50</option>
+                <option value="100">Words: 100</option>
+                <option value="endless">Endless Mode</option>
+            </select>
+            <select id="text-category">
+                <option value="common">Common Words</option>
+                <option value="quotes">Quotes</option>
+                <option value="pangrams">Pangrams</option>
+            </select>
+            <button id="theme-toggle">Light Mode</button>
+            <button id="history-button">Results History</button>
+            <button id="start-test">Start Test</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="test-container">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">WPM</div>
+                    <div class="stat-value" id="wpm">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">CPM</div>
+                    <div class="stat-value" id="cpm">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value" id="accuracy">100%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Errors</div>
+                    <div class="stat-value" id="errors">0</div>
+                </div>
+            </div>
+
+            <div class="typing-area">
+                <div id="text-display" tabindex="0">Press "Start Test" to begin typing</div>
+                <input type="text" id="text-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar"></div>
+                </div>
+                <div class="timer-display" id="timer">00:30</div>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Test Results</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-label">WPM</div>
+                    <div class="result-value" id="result-wpm">0</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">CPM</div>
+                    <div class="result-value" id="result-cpm">0</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Accuracy</div>
+                    <div class="result-value" id="result-accuracy">100%</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Time</div>
+                    <div class="result-value" id="result-time">0s</div>
+                </div>
+            </div>
+            <div class="error-analysis">
+                <h3>Error Analysis</h3>
+                <div id="error-list"></div>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button id="share-results">Share Results</button>
+                <button id="try-again">Try Again</button>
+            </div>
+        </div>
+
+        <div class="history-panel" id="history-panel">
+            <h2>Results History</h2>
+            <div id="history-list">
+                <!-- History items will be inserted here -->
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button id="clear-history" class="secondary">Clear History</button>
+                <button id="close-history">Close</button>
+            </div>
+        </div>
+
+        <div class="countdown" id="countdown">3</div>
+    </main>
+
+    <footer>
+        <p>Improve your typing speed and accuracy</p>
+    </footer>
+
+    <script>
+        // Sample text data
+        const textData = {
+            common: [
+                "The quick brown fox jumps over the lazy dog. This sentence contains all the letters in the English alphabet.",
+                "Typing is an essential skill in today's digital world. Practice regularly to improve your speed and accuracy.",
+                "Programming requires precise typing skills. Developers often need to type complex code quickly and accurately.",
+                "Communication through writing has become more important than ever. Good typing skills help you express ideas faster.",
+                "Learning to touch type can significantly increase your productivity. It allows you to focus on content rather than keys."
+            ],
+            quotes: [
+                "The only way to do great work is to love what you do. - Steve Jobs",
+                "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+                "Your time is limited, so don't waste it living someone else's life. - Steve Jobs",
+                "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+                "Success is not final, failure is not fatal: it is the courage to continue that counts. - Winston Churchill"
+            ],
+            pangrams: [
+                "The quick brown fox jumps over the lazy dog.",
+                "Pack my box with five dozen liquor jugs.",
+                "How vexingly quick daft zebras jump!",
+                "Waltz, bad nymph, for quick jigs vex.",
+                "Sphinx of black quartz, judge my vow."
+            ]
+        };
+
+        // DOM Elements
+        const textDisplay = document.getElementById('text-display');
+        const textInput = document.getElementById('text-input');
+        const wpmElement = document.getElementById('wpm');
+        const cpmElement = document.getElementById('cpm');
+        const accuracyElement = document.getElementById('accuracy');
+        const errorsElement = document.getElementById('errors');
+        const timerElement = document.getElementById('timer');
+        const progressBar = document.getElementById('progress-bar');
+        const resultsElement = document.getElementById('results');
+        const resultWpmElement = document.getElementById('result-wpm');
+        const resultCpmElement = document.getElementById('result-cpm');
+        const resultAccuracyElement = document.getElementById('result-accuracy');
+        const resultTimeElement = document.getElementById('result-time');
+        const errorListElement = document.getElementById('error-list');
+        const countdownElement = document.getElementById('countdown');
+        const themeToggle = document.getElementById('theme-toggle');
+        const startTestButton = document.getElementById('start-test');
+        const shareResultsButton = document.getElementById('share-results');
+        const tryAgainButton = document.getElementById('try-again');
+        const timerModeSelect = document.getElementById('timer-mode');
+        const textCategorySelect = document.getElementById('text-category');
+        const historyButton = document.getElementById('history-button');
+        const historyPanel = document.getElementById('history-panel');
+        const historyList = document.getElementById('history-list');
+        const clearHistoryButton = document.getElementById('clear-history');
+        const closeHistoryButton = document.getElementById('close-history');
+
+        // App State
+        let state = {
+            currentText: '',
+            words: [],
+            currentWordIndex: 0,
+            currentLetterIndex: 0,
+            startTime: null,
+            endTime: null,
+            timerInterval: null,
+            timeLeft: 30,
+            totalTime: 30,
+            totalChars: 0,
+            correctChars: 0,
+            errors: 0,
+            errorMap: new Map(),
+            isRunning: false,
+            isFinished: false,
+            mode: 'time', // 'time', 'words', 'endless'
+            wordGoal: 50,
+            testHistory: [] // Store previous test results
+        };
+
+        // Initialize the app
+        function init() {
+            loadNewText();
+            setupEventListeners();
+            loadHistoryFromStorage();
+            
+            // Set initial text display message
+            textDisplay.textContent = "Press 'Start Test' to begin typing";
+        }
+
+        // Load new text based on selected category
+        function loadNewText() {
+            const category = textCategorySelect.value;
+            const texts = textData[category];
+            const randomIndex = Math.floor(Math.random() * texts.length);
+            state.currentText = texts[randomIndex];
+            state.words = state.currentText.split(' ').map(word => {
+                return {
+                    text: word,
+                    letters: word.split('').map(letter => {
+                        return {
+                            char: letter,
+                            status: 'pending' // pending, correct, incorrect
+                        };
+                    })
+                };
+            });
+            
+            renderText();
+            resetStats();
+        }
+
+        // Render the text to be typed
+        function renderText() {
+            // Only render if we have actual text to display
+            if (state.currentText && state.words.length > 0) {
+                textDisplay.innerHTML = '';
+                
+                state.words.forEach((word, wordIndex) => {
+                    const wordElement = document.createElement('span');
+                    wordElement.className = 'word';
+                    
+                    if (wordIndex === state.currentWordIndex) {
+                        wordElement.classList.add('current');
+                    }
+                    
+                    word.letters.forEach((letter, letterIndex) => {
+                        const letterElement = document.createElement('span');
+                        letterElement.className = 'letter';
+                        letterElement.textContent = letter.char;
+                        
+                        if (letter.status === 'correct') {
+                            letterElement.classList.add('correct');
+                        } else if (letter.status === 'incorrect') {
+                            letterElement.classList.add('incorrect');
+                        }
+                        
+                        wordElement.appendChild(letterElement);
+                    });
+                    
+                    // Add space after word (except for the last word)
+                    if (wordIndex < state.words.length - 1) {
+                        const spaceElement = document.createElement('span');
+                        spaceElement.className = 'letter';
+                        spaceElement.textContent = ' ';
+                        
+                        if (wordIndex === state.currentWordIndex && state.currentLetterIndex >= word.letters.length) {
+                            spaceElement.classList.add('current');
+                        }
+                        
+                        wordElement.appendChild(spaceElement);
+                    }
+                    
+                    textDisplay.appendChild(wordElement);
+                });
+            }
+        }
+
+        // Reset statistics
+        function resetStats() {
+            state.currentWordIndex = 0;
+            state.currentLetterIndex = 0;
+            state.startTime = null;
+            state.endTime = null;
+            state.timeLeft = getInitialTime();
+            state.totalTime = getInitialTime();
+            state.totalChars = 0;
+            state.correctChars = 0;
+            state.errors = 0;
+            state.errorMap.clear();
+            state.isRunning = false;
+            state.isFinished = false;
+            
+            // Clear any existing intervals
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+            
+            // Reset UI
+            wpmElement.textContent = '0';
+            cpmElement.textContent = '0';
+            accuracyElement.textContent = '100%';
+            errorsElement.textContent = '0';
+            timerElement.textContent = formatTime(state.timeLeft);
+            progressBar.style.width = '0%';
+            resultsElement.classList.remove('active');
+            
+            // Reset all letter statuses if we have words
+            if (state.words.length > 0) {
+                state.words.forEach(word => {
+                    word.letters.forEach(letter => {
+                        letter.status = 'pending';
+                    });
+                });
+            }
+            
+            renderText();
+        }
+
+        // Get initial time based on selected mode
+        function getInitialTime() {
+            const modeValue = timerModeSelect.value;
+            
+            if (modeValue === 'endless') return 999; // Large number for endless mode
+            if (!isNaN(modeValue)) return parseInt(modeValue);
+            
+            return 30; // Default
+        }
+
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            if (seconds === 999) return "∞";
+            
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Start the typing test
+        function startTest() {
+            if (state.isRunning) return;
+            
+            // Only start if we have text to type
+            if (!state.currentText || state.words.length === 0) {
+                loadNewText();
+            }
+            
+            state.isRunning = true;
+            
+            // Start countdown
+            startCountdown();
+        }
+
+        // Start the 3-2-1 countdown
+        function startCountdown() {
+            let count = 3;
+            countdownElement.textContent = count;
+            countdownElement.classList.add('active');
+            
+            // Force focus for mobile devices
+            textInput.focus();
+            
+            const countdownInterval = setInterval(() => {
+                count--;
+                countdownElement.textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.classList.remove('active');
+                    
+                    // Start the actual test
+                    state.startTime = new Date();
+                    startTimer();
+                    
+                    // Force focus again after countdown
+                    setTimeout(() => {
+                        textInput.focus();
+                    }, 100);
+                }
+            }, 1000);
+        }
+
+        // Start the test timer
+        function startTimer() {
+            state.timerInterval = setInterval(() => {
+                if (state.mode !== 'endless') {
+                    state.timeLeft--;
+                    timerElement.textContent = formatTime(state.timeLeft);
+                    
+                    // Update progress bar
+                    if (state.mode === 'time') {
+                        const progress = ((state.totalTime - state.timeLeft) / state.totalTime) * 100;
+                        progressBar.style.width = `${progress}%`;
+                    }
+                    
+                    // Check if time is up
+                    if (state.timeLeft <= 0) {
+                        finishTest();
+                    }
+                }
+            }, 1000);
+        }
+
+        // Finish the test and show results
+        function finishTest() {
+            state.isRunning = false;
+            state.isFinished = true;
+            state.endTime = new Date();
+            
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+            
+            // Calculate final stats
+            const timeElapsed = (state.endTime - state.startTime) / 1000; // in seconds
+            const wpm = Math.round((state.correctChars / 5) / (timeElapsed / 60));
+            const cpm = Math.round(state.correctChars / (timeElapsed / 60));
+            const accuracy = state.totalChars > 0 ? Math.round((state.correctChars / state.totalChars) * 100) : 100;
+            
+            // Update result elements
+            resultWpmElement.textContent = wpm;
+            resultCpmElement.textContent = cpm;
+            resultAccuracyElement.textContent = `${accuracy}%`;
+            resultTimeElement.textContent = `${Math.round(timeElapsed)}s`;
+            
+            // Save results to history
+            saveResultsToHistory(wpm, cpm, accuracy, Math.round(timeElapsed));
+            
+            // Show error analysis
+            showErrorAnalysis();
+            
+            // Show results
+            resultsElement.classList.add('active');
+        }
+
+        // Save results to history and localStorage
+        function saveResultsToHistory(wpm, cpm, accuracy, time) {
+            const result = {
+                wpm: wpm,
+                cpm: cpm,
+                accuracy: accuracy,
+                time: time,
+                date: new Date().toLocaleString(),
+                mode: timerModeSelect.options[timerModeSelect.selectedIndex].text,
+                category: textCategorySelect.options[textCategorySelect.selectedIndex].text
+            };
+            
+            state.testHistory.unshift(result); // Add to beginning of array
+            
+            // Keep only last 50 results
+            if (state.testHistory.length > 50) {
+                state.testHistory = state.testHistory.slice(0, 50);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('typingTestHistory', JSON.stringify(state.testHistory));
+        }
+
+        // Load history from localStorage
+        function loadHistoryFromStorage() {
+            const storedHistory = localStorage.getItem('typingTestHistory');
+            if (storedHistory) {
+                state.testHistory = JSON.parse(storedHistory);
+            }
+        }
+
+        // Display history in the history panel
+        function displayHistory() {
+            historyList.innerHTML = '';
+            
+            if (state.testHistory.length === 0) {
+                historyList.innerHTML = '<p>No test results yet. Complete a test to see your history.</p>';
+                return;
+            }
+            
+            state.testHistory.forEach((result, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                historyItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>Test #${state.testHistory.length - index}</h3>
+                        <span>${result.date}</span>
+                    </div>
+                    <p>Mode: ${result.mode} | Category: ${result.category}</p>
+                    <div class="history-stats">
+                        <div class="history-stat">
+                            <div class="history-label">WPM</div>
+                            <div class="history-value">${result.wpm}</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-label">CPM</div>
+                            <div class="history-value">${result.cpm}</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-label">Accuracy</div>
+                            <div class="history-value">${result.accuracy}%</div>
+                        </div>
+                        <div class="history-stat">
+                            <div class="history-label">Time</div>
+                            <div class="history-value">${result.time}s</div>
+                        </div>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Show error analysis
+        function showErrorAnalysis() {
+            errorListElement.innerHTML = '';
+            
+            if (state.errorMap.size === 0) {
+                errorListElement.innerHTML = '<p>No errors made! Excellent typing!</p>';
+                return;
+            }
+            
+            // Convert error map to array and sort by frequency
+            const errorArray = Array.from(state.errorMap.entries());
+            errorArray.sort((a, b) => b[1] - a[1]);
+            
+            errorArray.forEach(([char, count]) => {
+                const errorItem = document.createElement('div');
+                errorItem.className = 'error-item';
+                errorItem.innerHTML = `
+                    <span>Mistyped "${char}"</span>
+                    <span>${count} time${count > 1 ? 's' : ''}</span>
+                `;
+                errorListElement.appendChild(errorItem);
+            });
+        }
+
+        // Handle text input
+        function handleInput(e) {
+            if (!state.isRunning || state.isFinished) return;
+            
+            const input = e.target.value;
+            const currentWord = state.words[state.currentWordIndex];
+            
+            // If backspace is pressed and we're at the beginning of a word
+            if (e.inputType === 'deleteContentBackward' && state.currentLetterIndex === 0 && state.currentWordIndex > 0) {
+                // Move to previous word
+                state.currentWordIndex--;
+                state.currentLetterIndex = state.words[state.currentWordIndex].letters.length;
+                textInput.value = '';
+                renderText();
+                return;
+            }
+            
+            // If we've completed the current word
+            if (state.currentLetterIndex >= currentWord.letters.length) {
+                // Check if the next character is a space
+                if (input.endsWith(' ')) {
+                    // Move to next word
+                    state.currentWordIndex++;
+                    state.currentLetterIndex = 0;
+                    textInput.value = '';
+                    renderText();
+                    
+                    // Check if we've completed all words (for word goal mode)
+                    if (state.mode === 'words' && state.currentWordIndex >= state.wordGoal) {
+                        finishTest();
+                    }
+                }
+                return;
+            }
+            
+            // Get the current expected character
+            const expectedChar = currentWord.letters[state.currentLetterIndex].char;
+            const actualChar = input.charAt(input.length - 1);
+            
+            // If no new character was added (e.g., backspace)
+            if (input.length <= state.currentLetterIndex) {
+                // Handle backspace - revert the status of the previous character
+                if (state.currentLetterIndex > 0) {
+                    state.currentLetterIndex--;
+                    currentWord.letters[state.currentLetterIndex].status = 'pending';
+                    
+                    // Update stats if we're correcting an error
+                    if (state.errors > 0) {
+                        state.errors--;
+                        errorsElement.textContent = state.errors;
+                    }
+                }
+            } else {
+                // A new character was typed
+                state.totalChars++;
+                
+                if (actualChar === expectedChar) {
+                    // Correct character
+                    currentWord.letters[state.currentLetterIndex].status = 'correct';
+                    state.correctChars++;
+                } else {
+                    // Incorrect character
+                    currentWord.letters[state.currentLetterIndex].status = 'incorrect';
+                    state.errors++;
+                    
+                    // Track error in error map
+                    if (state.errorMap.has(expectedChar)) {
+                        state.errorMap.set(expectedChar, state.errorMap.get(expectedChar) + 1);
+                    } else {
+                        state.errorMap.set(expectedChar, 1);
+                    }
+                    
+                    errorsElement.textContent = state.errors;
+                }
+                
+                state.currentLetterIndex++;
+                
+                // Update WPM and CPM in real-time
+                updateRealTimeStats();
+            }
+            
+            renderText();
+        }
+
+        // Update real-time statistics
+        function updateRealTimeStats() {
+            if (!state.startTime) return;
+            
+            const timeElapsed = (new Date() - state.startTime) / 1000; // in seconds
+            const wpm = Math.round((state.correctChars / 5) / (timeElapsed / 60));
+            const cpm = Math.round(state.correctChars / (timeElapsed / 60));
+            const accuracy = state.totalChars > 0 ? Math.round((state.correctChars / state.totalChars) * 100) : 100;
+            
+            wpmElement.textContent = wpm;
+            cpmElement.textContent = cpm;
+            accuracyElement.textContent = `${accuracy}%`;
+            
+            // Update progress bar for word goal mode
+            if (state.mode === 'words') {
+                const progress = (state.currentWordIndex / state.wordGoal) * 100;
+                progressBar.style.width = `${Math.min(progress, 100)}%`;
+            }
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            textInput.addEventListener('input', handleInput);
+            
+            // Make the text display area clickable to focus the input
+            textDisplay.addEventListener('click', () => {
+                if (state.isRunning && !state.isFinished) {
+                    textInput.focus();
+                }
+            });
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                themeToggle.textContent = document.body.classList.contains('light-theme') ? 'Dark Mode' : 'Light Mode';
+            });
+            
+            startTestButton.addEventListener('click', () => {
+                loadNewText();
+                startTest();
+            });
+            
+            tryAgainButton.addEventListener('click', () => {
+                resetStats();
+                textInput.focus();
+                startTest();
+            });
+            
+            shareResultsButton.addEventListener('click', () => {
+                // Simple share implementation
+                const wpm = resultWpmElement.textContent;
+                const accuracy = resultAccuracyElement.textContent;
+                alert(`I typed at ${wpm} WPM with ${accuracy} accuracy on Typing Speed Test!`);
+            });
+            
+            timerModeSelect.addEventListener('change', () => {
+                const modeValue = timerModeSelect.value;
+                
+                if (modeValue === 'endless') {
+                    state.mode = 'endless';
+                    state.timeLeft = 999;
+                    state.totalTime = 999;
+                } else if (!isNaN(modeValue)) {
+                    state.mode = 'time';
+                    state.timeLeft = parseInt(modeValue);
+                    state.totalTime = state.timeLeft;
+                } else {
+                    state.mode = 'words';
+                    state.wordGoal = parseInt(modeValue);
+                }
+                
+                resetStats();
+            });
+            
+            textCategorySelect.addEventListener('change', () => {
+                loadNewText();
+            });
+            
+            historyButton.addEventListener('click', () => {
+                displayHistory();
+                historyPanel.classList.add('active');
+                resultsElement.classList.remove('active');
+            });
+            
+            closeHistoryButton.addEventListener('click', () => {
+                historyPanel.classList.remove('active');
+            });
+            
+            clearHistoryButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all history?')) {
+                    state.testHistory = [];
+                    localStorage.removeItem('typingTestHistory');
+                    displayHistory();
+                }
+            });
+            
+            // Prevent spacebar from scrolling the page
+            window.addEventListener('keydown', (e) => {
+                if (e.key === ' ' && e.target === textInput) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
