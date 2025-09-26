@@ -3,45 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typing Speed Test by h1m</title>
+    <title>Typing Speed Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #8b5cf6;      
-            --primary-light: #a78bfa;
-            --secondary: #1e1b2e;     
-            --accent: #7c3aed;        
-            --light: #1a1a1a;         
-            --dark: #f5f5f5;          
-            --success: #10b981;       
-            --warning: #f59e0b;       
-            --danger: #ef4444;        
-            --gray: #9ca3af;          
-            --gray-light: #2a2a2a;   
-            --shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-            --radius: 12px;
-            --transition: all 0.3s ease;
-        }
+     :root {
+    --primary: #4E6851;      /* Green from palette */
+    --primary-light: #6a8a6d;
+    --secondary: #B83A2D;    /* Red from palette */
+    --accent: #DCC9A9;       /* Beige from palette */
+    --light: #f8f5f0;        /* Light background */
+    --dark: #2c2c2c;         /* Dark text */
+    --success: #4E6851;      /* Green for correct */
+    --warning: #B83A2D;      /* Red for warnings */
+    --danger: #B83A2D;       /* Red for errors */
+    --gray: #9c9589;         /* Muted gray */
+    --gray-light: #e8e3d9;   /* Light gray */
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    --radius: 16px;
+    --transition: all 0.3s ease;
+}
 
-        .light-theme {
-            --primary: #4361ee;
-            --primary-light: #4895ef;
-            --secondary: #3a0ca3;
-            --accent: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --gray: #6c757d;
-            --gray-light: #e9ecef;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
+.light-theme {
+    --primary: #8BCF97;       /* Softer green for dark bg */
+    --primary-light: #A7E0B0; /* Lighter tint of green */
+    --secondary: #FF6B5E;     /* Vibrant red for accents */
+    --accent: #C1A978;        /* Golden-beige accent */
+    --light: #1e1e1e;         /* Dark bg */
+    --dark: #f5f5f5;          /* Light text */
+    --success: #8BCF97;       /* Green for correct */
+    --warning: #FF6B5E;       /* Red for warnings */
+    --danger: #FF6B5E;        /* Red for errors */
+    --gray: #b0aaa0;          /* Muted gray (visible on dark) */
+    --gray-light: #3a3a3a;    /* Slightly lighter gray bg */
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    --radius: 16px;
+    --transition: all 0.3s ease;
+}
+
+/* Add dark-theme class with the original values */
+.dark-theme {
+    --primary: #4E6851;      /* Green from palette */
+    --primary-light: #6a8a6d;
+    --secondary: #B83A2D;    /* Red from palette */
+    --accent: #DCC9A9;       /* Beige from palette */
+    --light: #f8f5f0;        /* Light background */
+    --dark: #2c2c2c;         /* Dark text */
+    --success: #4E6851;      /* Green for correct */
+    --warning: #B83A2D;      /* Red for warnings */
+    --danger: #B83A2D;       /* Red for errors */
+    --gray: #9c9589;         /* Muted gray */
+    --gray-light: #e8e3d9;   /* Light gray */
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    --radius: 16px;
+    --transition: all 0.3s ease;
+} 
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         body {
@@ -51,83 +72,234 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+				  --transition: all 0.3s ease;
         }
 
-        header {
+        /* Top Navbar */
+        .top-navbar {
             background-color: var(--light);
-            padding: 1rem;
+            padding: 1rem 1rem;
             box-shadow: var(--shadow);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
             z-index: 100;
+            border-radius:var(--radius);
+            margin : 1rem 1.5rem 1rem 1.5rem;
+				
+				
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
-        .controls {
+        .logo-subtitle {
+            font-size: 0.7rem;
+            color: var(--gray);
+            font-weight: normal;
+            margin-left: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary);
+        }
+
+        /* Main Layout - Split View */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 120px);
+            gap: 1.5rem;
+            padding: 0 1.5rem;
+        }
+
+        .test-card, .control-card {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: var(--light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .test-card:hover, .control-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Control Center Navbar */
+        .control-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .control-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .reset-button {
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .reset-button:hover {
+            color: var(--primary);
+        }
+
+        /* Control Center Content */
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-button {
+            background-color: var(--gray-light);
+            color: var(--dark);
+            border: none;
+            padding: 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mode-button:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .mode-button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .action-buttons {
             display: flex;
             gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
+            margin-top: auto;
         }
 
-        button {
+        .action-button {
+            flex: 1;
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
+            padding: 1rem;
             border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
             font-weight: 600;
         }
 
-        button:hover {
+        .action-button:hover {
             background-color: var(--primary-light);
-            transform: translateY(-2px);
         }
 
-        button.secondary {
+        .action-button.secondary {
             background-color: var(--gray);
         }
 
-        button.secondary:hover {
+        .action-button.secondary:hover {
             background-color: var(--gray-light);
             color: var(--dark);
         }
 
-        select, input {
-            padding: 0.5rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--gray-light);
-            background-color: var(--light);
-            color: var(--dark);
-        }
-
-        main {
-            flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .test-container {
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
             background-color: var(--light);
-            border-radius: var(--radius);
             padding: 2rem;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 400px;
             box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            transition: var(--transition);
         }
 
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .modal-option {
+            background-color: var(--gray-light);
+            border: none;
+            padding: 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .modal-option:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Test Card Styles */
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -190,11 +362,10 @@
         }
 
         .current {
-            background-color: rgba(139, 92, 246, 0.1);
+            background-color: rgba(78, 104, 81, 0.1);
             border-radius: 4px;
         }
 
-        /* Mobile-friendly input field */
         #text-input {
             width: 100%;
             height: 100%;
@@ -204,7 +375,7 @@
             left: 0;
             z-index: 10;
             cursor: text;
-            font-size: 16px; /* Prevents zoom on iOS */
+            font-size: 16px;
         }
 
         .timer-display {
@@ -304,6 +475,7 @@
             max-height: 70vh;
             overflow-y: auto;
             transition: var(--transition);
+				 margin : 1rem 1.5rem 1rem 1.5rem ;
         }
 
         .history-panel.active {
@@ -348,15 +520,21 @@
             background-color: var(--light);
             margin-top: auto;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 1.5rem;
+				 opacity : 0;
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
-            main {
-                padding: 1rem;
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                gap: 1rem;
             }
             
-            .test-container, .results, .history-panel {
+            .test-card, .control-card {
                 padding: 1rem;
+                width: 100%;
             }
             
             .stats {
@@ -367,24 +545,19 @@
                 font-size: 1rem;
             }
             
-            .controls {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
             .countdown {
                 font-size: 5rem;
+            }
+            
+            /* Control center goes above test card on small screens */
+            .main-container {
+                flex-direction: column-reverse;
             }
         }
 
         @media (max-width: 480px) {
             .stats, .results-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 1rem;
             }
             
             .countdown {
@@ -394,34 +567,37 @@
             .history-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .top-navbar {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .logo-subtitle {
+                font-size: 0.6rem;
+            }
         }
     </style>
 </head>
 <body class="dark-theme">
-    <header>
-        <div class="logo">Typing Speed Test</div>
-        <div class="controls">
-            <select id="timer-mode">
-                <option value="30">Time: 30s</option>
-                <option value="60">Time: 60s</option>
-                <option value="120">Time: 120s</option>
-                <option value="50">Words: 50</option>
-                <option value="100">Words: 100</option>
-                <option value="endless">Endless Mode</option>
-            </select>
-            <select id="text-category">
-                <option value="common">Common Words</option>
-                <option value="quotes">Quotes</option>
-                <option value="pangrams">Pangrams</option>
-            </select>
-            <button id="theme-toggle">Light Mode</button>
-            <button id="history-button">Results History</button>
-            <button id="start-test">Start Test</button>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+        <div class="logo">
+            <i class="fas fa-keyboard"></i>
+            <span>Typing Test <span class="logo-subtitle">by h1m</span></span>
         </div>
-    </header>
+        <button class="theme-toggle" id="theme-toggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </nav>
 
-    <main>
-        <div class="test-container">
+    <!-- Main Content - Split View -->
+    <div class="main-container">
+        <!-- Left Side - Test Card -->
+        <div class="test-card">
             <div class="stats">
                 <div class="stat-card">
                     <div class="stat-label">WPM</div>
@@ -449,51 +625,127 @@
                 </div>
                 <div class="timer-display" id="timer">00:30</div>
             </div>
-        </div>
 
-        <div class="results" id="results">
-            <h2>Test Results</h2>
-            <div class="results-grid">
-                <div class="result-card">
-                    <div class="result-label">WPM</div>
-                    <div class="result-value" id="result-wpm">0</div>
+            <div class="results" id="results">
+                <h2>Test Results</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">WPM</div>
+                        <div class="result-value" id="result-wpm">0</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">CPM</div>
+                        <div class="result-value" id="result-cpm">0</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Accuracy</div>
+                        <div class="result-value" id="result-accuracy">100%</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Time</div>
+                        <div class="result-value" id="result-time">0s</div>
+                    </div>
                 </div>
-                <div class="result-card">
-                    <div class="result-label">CPM</div>
-                    <div class="result-value" id="result-cpm">0</div>
+                <div class="error-analysis">
+                    <h3>Error Analysis</h3>
+                    <div id="error-list"></div>
                 </div>
-                <div class="result-card">
-                    <div class="result-label">Accuracy</div>
-                    <div class="result-value" id="result-accuracy">100%</div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button id="share-results" class="action-button">Share Results</button>
                 </div>
-                <div class="result-card">
-                    <div class="result-label">Time</div>
-                    <div class="result-value" id="result-time">0s</div>
-                </div>
-            </div>
-            <div class="error-analysis">
-                <h3>Error Analysis</h3>
-                <div id="error-list"></div>
-            </div>
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <button id="share-results">Share Results</button>
-                <button id="try-again">Try Again</button>
-            </div>
-        </div>
-
-        <div class="history-panel" id="history-panel">
-            <h2>Results History</h2>
-            <div id="history-list">
-                <!-- History items will be inserted here -->
-            </div>
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <button id="clear-history" class="secondary">Clear History</button>
-                <button id="close-history">Close</button>
             </div>
         </div>
 
-        <div class="countdown" id="countdown">3</div>
-    </main>
+        <!-- Right Side - Control Center Card -->
+        <div class="control-card">
+            <div class="control-navbar">
+                <div class="control-title">Control Center</div>
+                <button class="reset-button" id="reset-button">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+
+            <div class="mode-buttons">
+                <button class="mode-button" id="time-trial-button">
+                    Time Trial
+                    <span id="time-trial-value">30s</span>
+                </button>
+                <button class="mode-button" id="word-count-button">
+                    Word Count
+                    <span id="word-count-value">50</span>
+                </button>
+                <button class="mode-button" id="coding-mode-button">
+                    Coding Mode
+                    <span id="coding-mode-value">JavaScript</span>
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-button secondary" id="history-button">View Result History</button>
+                <button class="action-button" id="start-test">Start Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for Mode Selection -->
+    <div class="modal" id="time-trial-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Time Duration</h3>
+                <button class="modal-close" id="close-time-trial">&times;</button>
+            </div>
+            <div class="modal-options">
+                <button class="modal-option" data-value="30">30 seconds</button>
+                <button class="modal-option" data-value="60">60 seconds</button>
+                <button class="modal-option" data-value="120">120 seconds</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="word-count-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Word Count</h3>
+                <button class="modal-close" id="close-word-count">&times;</button>
+            </div>
+            <div class="modal-options">
+                <button class="modal-option" data-value="25">25 words</button>
+                <button class="modal-option" data-value="50">50 words</button>
+                <button class="modal-option" data-value="100">100 words</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="coding-mode-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Programming Language</h3>
+                <button class="modal-close" id="close-coding-mode">&times;</button>
+            </div>
+            <div class="modal-options">
+                <button class="modal-option" data-value="javascript">JavaScript</button>
+                <button class="modal-option" data-value="python">Python</button>
+                <button class="modal-option" data-value="java">Java</button>
+                <button class="modal-option" data-value="cpp">C++</button>
+                <button class="modal-option" data-value="html">HTML</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="history-panel" id="history-panel">
+        <h2>Results History</h2>
+        <div id="history-list">
+            <!-- History items will be inserted here -->
+        </div>
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <button id="clear-history" class="action-button secondary">Clear History</button>
+            <button id="close-history" class="action-button">Close</button>
+        </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown" id="countdown">3</div>
 
     <footer>
         <p>Improve your typing speed and accuracy</p>
@@ -522,6 +774,41 @@
                 "How vexingly quick daft zebras jump!",
                 "Waltz, bad nymph, for quick jigs vex.",
                 "Sphinx of black quartz, judge my vow."
+            ],
+            javascript: [
+                "function calculateSum(a, b) { return a + b; }",
+                "const numbers = [1, 2, 3, 4, 5]; const doubled = numbers.map(n => n * 2);",
+                "class Person { constructor(name) { this.name = name; } greet() { return `Hello, ${this.name}`; } }",
+                "const fetchData = async () => { const response = await fetch('/api/data'); return response.json(); }",
+                "if (user && user.isActive) { console.log('User is active'); } else { console.log('User is inactive'); }"
+            ],
+            python: [
+                "def calculate_sum(a, b): return a + b",
+                "numbers = [1, 2, 3, 4, 5] doubled = [n * 2 for n in numbers]",
+                "class Person: def __init__(self, name): self.name = name def greet(self): return f'Hello, {self.name}'",
+                "with open('file.txt', 'r') as file: content = file.read()",
+                "if user and user.is_active: print('User is active') else: print('User is inactive')"
+            ],
+            java: [
+                "public int calculateSum(int a, int b) { return a + b; }",
+                "List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5); List<Integer> doubled = numbers.stream().map(n -> n * 2).collect(Collectors.toList());",
+                "public class Person { private String name; public Person(String name) { this.name = name; } public String greet() { return \"Hello, \" + name; } }",
+                "try { File file = new File(\"file.txt\"); Scanner scanner = new Scanner(file); while (scanner.hasNextLine()) { String line = scanner.nextLine(); } } catch (FileNotFoundException e) { e.printStackTrace(); }",
+                "if (user != null && user.isActive()) { System.out.println(\"User is active\"); } else { System.out.println(\"User is inactive\"); }"
+            ],
+            cpp: [
+                "int calculateSum(int a, int b) { return a + b; }",
+                "vector<int> numbers = {1, 2, 3, 4, 5}; vector<int> doubled; for (int n : numbers) { doubled.push_back(n * 2); }",
+                "class Person { private: string name; public: Person(string name) : name(name) {} string greet() { return \"Hello, \" + name; } };",
+                "ifstream file(\"file.txt\"); string line; while (getline(file, line)) { cout << line << endl; }",
+                "if (user != nullptr && user->isActive()) { cout << \"User is active\" << endl; } else { cout << \"User is inactive\" << endl; }"
+            ],
+            html: [
+                "<div class=\"container\"><h1>Welcome</h1><p>This is a paragraph</p></div>",
+                "<form action=\"/submit\" method=\"post\"><input type=\"text\" name=\"username\" placeholder=\"Enter username\"><button type=\"submit\">Submit</button></form>",
+                "<table><tr><th>Name</th><th>Age</th></tr><tr><td>John</td><td>25</td></tr><tr><td>Jane</td><td>30</td></tr></table>",
+                "<nav><ul><li><a href=\"#home\">Home</a></li><li><a href=\"#about\">About</a></li><li><a href=\"#contact\">Contact</a></li></ul></nav>",
+                "<!DOCTYPE html><html><head><title>My Page</title></head><body><h1>Hello World</h1></body></html>"
             ]
         };
 
@@ -544,14 +831,29 @@
         const themeToggle = document.getElementById('theme-toggle');
         const startTestButton = document.getElementById('start-test');
         const shareResultsButton = document.getElementById('share-results');
-        const tryAgainButton = document.getElementById('try-again');
-        const timerModeSelect = document.getElementById('timer-mode');
-        const textCategorySelect = document.getElementById('text-category');
+        const timeTrialButton = document.getElementById('time-trial-button');
+        const wordCountButton = document.getElementById('word-count-button');
+        const codingModeButton = document.getElementById('coding-mode-button');
+        const timeTrialValue = document.getElementById('time-trial-value');
+        const wordCountValue = document.getElementById('word-count-value');
+        const codingModeValue = document.getElementById('coding-mode-value');
         const historyButton = document.getElementById('history-button');
         const historyPanel = document.getElementById('history-panel');
         const historyList = document.getElementById('history-list');
         const clearHistoryButton = document.getElementById('clear-history');
         const closeHistoryButton = document.getElementById('close-history');
+        const resetButton = document.getElementById('reset-button');
+        
+        // Modal Elements
+        const timeTrialModal = document.getElementById('time-trial-modal');
+        const wordCountModal = document.getElementById('word-count-modal');
+        const codingModeModal = document.getElementById('coding-mode-modal');
+        const closeTimeTrial = document.getElementById('close-time-trial');
+        const closeWordCount = document.getElementById('close-word-count');
+        const closeCodingMode = document.getElementById('close-coding-mode');
+        const timeTrialOptions = timeTrialModal.querySelectorAll('.modal-option');
+        const wordCountOptions = wordCountModal.querySelectorAll('.modal-option');
+        const codingModeOptions = codingModeModal.querySelectorAll('.modal-option');
 
         // App State
         let state = {
@@ -570,24 +872,57 @@
             errorMap: new Map(),
             isRunning: false,
             isFinished: false,
-            mode: 'time', // 'time', 'words', 'endless'
+            mode: 'time', // 'time', 'words', 'coding'
             wordGoal: 50,
-            testHistory: [] // Store previous test results
+            codingLanguage: 'javascript',
+            testHistory: [],
+            hasStartedFirstTest: false
         };
 
         // Initialize the app
         function init() {
-            loadNewText();
             setupEventListeners();
             loadHistoryFromStorage();
+            resetToDefaults();
             
             // Set initial text display message
             textDisplay.textContent = "Press 'Start Test' to begin typing";
         }
 
-        // Load new text based on selected category
+        // Reset everything to default values
+        function resetToDefaults() {
+            state.mode = 'time';
+            state.timeLeft = 30;
+            state.totalTime = 30;
+            state.wordGoal = 50;
+            state.codingLanguage = 'javascript';
+            
+            // Update UI to reflect defaults
+            timeTrialValue.textContent = '30s';
+            wordCountValue.textContent = '50';
+            codingModeValue.textContent = 'JavaScript';
+            
+            // Reset active states
+            timeTrialButton.classList.add('active');
+            wordCountButton.classList.remove('active');
+            codingModeButton.classList.remove('active');
+            
+            // Reset test state
+            resetStats();
+        }
+
+        // Load new text based on selected mode
         function loadNewText() {
-            const category = textCategorySelect.value;
+            let category = 'common';
+            
+            if (state.mode === 'coding') {
+                category = state.codingLanguage;
+            } else {
+                // Randomly select between common, quotes, and pangrams
+                const categories = ['common', 'quotes', 'pangrams'];
+                category = categories[Math.floor(Math.random() * categories.length)];
+            }
+            
             const texts = textData[category];
             const randomIndex = Math.floor(Math.random() * texts.length);
             state.currentText = texts[randomIndex];
@@ -597,7 +932,7 @@
                     letters: word.split('').map(letter => {
                         return {
                             char: letter,
-                            status: 'pending' // pending, correct, incorrect
+                            status: 'pending'
                         };
                     })
                 };
@@ -609,7 +944,6 @@
 
         // Render the text to be typed
         function renderText() {
-            // Only render if we have actual text to display
             if (state.currentText && state.words.length > 0) {
                 textDisplay.innerHTML = '';
                 
@@ -635,7 +969,6 @@
                         wordElement.appendChild(letterElement);
                     });
                     
-                    // Add space after word (except for the last word)
                     if (wordIndex < state.words.length - 1) {
                         const spaceElement = document.createElement('span');
                         spaceElement.className = 'letter';
@@ -668,13 +1001,11 @@
             state.isRunning = false;
             state.isFinished = false;
             
-            // Clear any existing intervals
             if (state.timerInterval) {
                 clearInterval(state.timerInterval);
                 state.timerInterval = null;
             }
             
-            // Reset UI
             wpmElement.textContent = '0';
             cpmElement.textContent = '0';
             accuracyElement.textContent = '100%';
@@ -683,7 +1014,6 @@
             progressBar.style.width = '0%';
             resultsElement.classList.remove('active');
             
-            // Reset all letter statuses if we have words
             if (state.words.length > 0) {
                 state.words.forEach(word => {
                     word.letters.forEach(letter => {
@@ -697,12 +1027,8 @@
 
         // Get initial time based on selected mode
         function getInitialTime() {
-            const modeValue = timerModeSelect.value;
-            
-            if (modeValue === 'endless') return 999; // Large number for endless mode
-            if (!isNaN(modeValue)) return parseInt(modeValue);
-            
-            return 30; // Default
+            if (state.mode === 'words' || state.mode === 'coding') return 999;
+            return state.timeLeft;
         }
 
         // Format time as MM:SS
@@ -718,14 +1044,18 @@
         function startTest() {
             if (state.isRunning) return;
             
-            // Only start if we have text to type
             if (!state.currentText || state.words.length === 0) {
                 loadNewText();
             }
             
             state.isRunning = true;
             
-            // Start countdown
+            // Update button text after first start
+            if (!state.hasStartedFirstTest) {
+                state.hasStartedFirstTest = true;
+                startTestButton.textContent = "Retake Test";
+            }
+            
             startCountdown();
         }
 
@@ -735,7 +1065,6 @@
             countdownElement.textContent = count;
             countdownElement.classList.add('active');
             
-            // Force focus for mobile devices
             textInput.focus();
             
             const countdownInterval = setInterval(() => {
@@ -746,11 +1075,9 @@
                     clearInterval(countdownInterval);
                     countdownElement.classList.remove('active');
                     
-                    // Start the actual test
                     state.startTime = new Date();
                     startTimer();
                     
-                    // Force focus again after countdown
                     setTimeout(() => {
                         textInput.focus();
                     }, 100);
@@ -761,22 +1088,116 @@
         // Start the test timer
         function startTimer() {
             state.timerInterval = setInterval(() => {
-                if (state.mode !== 'endless') {
+                if (state.mode === 'time') {
                     state.timeLeft--;
                     timerElement.textContent = formatTime(state.timeLeft);
                     
-                    // Update progress bar
-                    if (state.mode === 'time') {
-                        const progress = ((state.totalTime - state.timeLeft) / state.totalTime) * 100;
-                        progressBar.style.width = `${progress}%`;
-                    }
+                    const progress = ((state.totalTime - state.timeLeft) / state.totalTime) * 100;
+                    progressBar.style.width = `${progress}%`;
                     
-                    // Check if time is up
                     if (state.timeLeft <= 0) {
                         finishTest();
                     }
                 }
             }, 1000);
+        }
+
+        // Handle typing input
+        function handleInput(e) {
+            if (!state.isRunning || state.isFinished) return;
+            
+            const input = e.data;
+            const currentWord = state.words[state.currentWordIndex];
+            
+            if (!currentWord) return;
+            
+            if (input === ' ') {
+                if (state.currentLetterIndex < currentWord.letters.length) {
+                    // Mark remaining letters as incorrect
+                    for (let i = state.currentLetterIndex; i < currentWord.letters.length; i++) {
+                        currentWord.letters[i].status = 'incorrect';
+                        state.errors++;
+                    }
+                }
+                
+                // Move to next word
+                state.currentWordIndex++;
+                state.currentLetterIndex = 0;
+                
+                // Check if test is finished
+                if (state.currentWordIndex >= state.words.length) {
+                    if (state.mode === 'words' && state.currentWordIndex >= state.wordGoal) {
+                        finishTest();
+                    } else {
+                        loadNewText();
+                    }
+                }
+                
+                renderText();
+                updateStats();
+                return;
+            }
+            
+            // Handle character input
+            if (state.currentLetterIndex < currentWord.letters.length) {
+                const currentLetter = currentWord.letters[state.currentLetterIndex];
+                
+                if (input === currentLetter.char) {
+                    currentLetter.status = 'correct';
+                    state.correctChars++;
+                } else {
+                    currentLetter.status = 'incorrect';
+                    state.errors++;
+                    
+                    // Track error frequency
+                    const errorChar = currentLetter.char;
+                    state.errorMap.set(errorChar, (state.errorMap.get(errorChar) || 0) + 1);
+                }
+                
+                state.currentLetterIndex++;
+                state.totalChars++;
+                
+                // Move to next word if at the end of current word
+                if (state.currentLetterIndex >= currentWord.letters.length) {
+                    // Check if there's a space after this word
+                    if (state.currentWordIndex < state.words.length - 1) {
+                        // Wait for space to be pressed
+                    } else {
+                        // This is the last word, test is complete
+                        if (state.mode === 'words' && state.currentWordIndex >= state.wordGoal - 1) {
+                            finishTest();
+                        }
+                    }
+                }
+                
+                renderText();
+                updateStats();
+                
+                // Check if word goal is reached
+                if (state.mode === 'words' && state.currentWordIndex >= state.wordGoal - 1 && 
+                    state.currentLetterIndex >= currentWord.letters.length) {
+                    finishTest();
+                }
+            }
+        }
+
+        // Update real-time statistics
+        function updateStats() {
+            if (!state.startTime) return;
+            
+            const currentTime = new Date();
+            const elapsedSeconds = (currentTime - state.startTime) / 1000;
+            const minutes = elapsedSeconds / 60;
+            
+            // Calculate WPM and CPM
+            const wpm = Math.round(state.correctChars / 5 / minutes) || 0;
+            const cpm = Math.round(state.correctChars / minutes) || 0;
+            const accuracy = state.totalChars > 0 ? Math.round((state.correctChars / state.totalChars) * 100) : 100;
+            
+            wpmElement.textContent = wpm;
+            cpmElement.textContent = cpm;
+            accuracyElement.textContent = `${accuracy}%`;
+            errorsElement.textContent = state.errors;
         }
 
         // Finish the test and show results
@@ -790,61 +1211,77 @@
                 state.timerInterval = null;
             }
             
-            // Calculate final stats
-            const timeElapsed = (state.endTime - state.startTime) / 1000; // in seconds
-            const wpm = Math.round((state.correctChars / 5) / (timeElapsed / 60));
-            const cpm = Math.round(state.correctChars / (timeElapsed / 60));
+            const elapsedSeconds = (state.endTime - state.startTime) / 1000;
+            const minutes = elapsedSeconds / 60;
+            
+            // Calculate final statistics
+            const wpm = Math.round(state.correctChars / 5 / minutes) || 0;
+            const cpm = Math.round(state.correctChars / minutes) || 0;
             const accuracy = state.totalChars > 0 ? Math.round((state.correctChars / state.totalChars) * 100) : 100;
             
-            // Update result elements
+            // Update result display
             resultWpmElement.textContent = wpm;
             resultCpmElement.textContent = cpm;
             resultAccuracyElement.textContent = `${accuracy}%`;
-            resultTimeElement.textContent = `${Math.round(timeElapsed)}s`;
-            
-            // Save results to history
-            saveResultsToHistory(wpm, cpm, accuracy, Math.round(timeElapsed));
+            resultTimeElement.textContent = `${Math.round(elapsedSeconds)}s`;
             
             // Show error analysis
-            showErrorAnalysis();
+            errorListElement.innerHTML = '';
+            if (state.errorMap.size > 0) {
+                const sortedErrors = Array.from(state.errorMap.entries())
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                sortedErrors.forEach(([char, count]) => {
+                    const errorItem = document.createElement('div');
+                    errorItem.className = 'error-item';
+                    errorItem.innerHTML = `
+                        <span>${char === ' ' ? 'Space' : char}</span>
+                        <span>${count} error${count !== 1 ? 's' : ''}</span>
+                    `;
+                    errorListElement.appendChild(errorItem);
+                });
+            } else {
+                const noErrors = document.createElement('div');
+                noErrors.className = 'error-item';
+                noErrors.textContent = 'No errors made! Excellent typing!';
+                errorListElement.appendChild(noErrors);
+            }
             
             // Show results
             resultsElement.classList.add('active');
+            
+            // Save to history
+            saveToHistory(wpm, cpm, accuracy, Math.round(elapsedSeconds));
+            
+            // Scroll to results
+            resultsElement.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Save results to history and localStorage
-        function saveResultsToHistory(wpm, cpm, accuracy, time) {
+        // Save test results to history
+        function saveToHistory(wpm, cpm, accuracy, time) {
             const result = {
-                wpm: wpm,
-                cpm: cpm,
-                accuracy: accuracy,
-                time: time,
-                date: new Date().toLocaleString(),
-                mode: timerModeSelect.options[timerModeSelect.selectedIndex].text,
-                category: textCategorySelect.options[textCategorySelect.selectedIndex].text
+                wpm,
+                cpm,
+                accuracy,
+                time,
+                mode: state.mode,
+                date: new Date().toISOString()
             };
             
-            state.testHistory.unshift(result); // Add to beginning of array
+            state.testHistory.unshift(result);
             
-            // Keep only last 50 results
-            if (state.testHistory.length > 50) {
-                state.testHistory = state.testHistory.slice(0, 50);
+            // Keep only last 10 results
+            if (state.testHistory.length > 10) {
+                state.testHistory = state.testHistory.slice(0, 10);
             }
             
-            // Save to localStorage
-            localStorage.setItem('typingTestHistory', JSON.stringify(state.testHistory));
+            saveHistoryToStorage();
+            updateHistoryDisplay();
         }
 
-        // Load history from localStorage
-        function loadHistoryFromStorage() {
-            const storedHistory = localStorage.getItem('typingTestHistory');
-            if (storedHistory) {
-                state.testHistory = JSON.parse(storedHistory);
-            }
-        }
-
-        // Display history in the history panel
-        function displayHistory() {
+        // Update the history display
+        function updateHistoryDisplay() {
             historyList.innerHTML = '';
             
             if (state.testHistory.length === 0) {
@@ -856,27 +1293,29 @@
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
                 
+                const date = new Date(result.date);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
                 historyItem.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3>Test #${state.testHistory.length - index}</h3>
-                        <span>${result.date}</span>
+                        <strong>Test #${state.testHistory.length - index}</strong>
+                        <span>${formattedDate}</span>
                     </div>
-                    <p>Mode: ${result.mode} | Category: ${result.category}</p>
                     <div class="history-stats">
                         <div class="history-stat">
-                            <div class="history-label">WPM</div>
+                            <div>WPM</div>
                             <div class="history-value">${result.wpm}</div>
                         </div>
                         <div class="history-stat">
-                            <div class="history-label">CPM</div>
+                            <div>CPM</div>
                             <div class="history-value">${result.cpm}</div>
                         </div>
                         <div class="history-stat">
-                            <div class="history-label">Accuracy</div>
+                            <div>Accuracy</div>
                             <div class="history-value">${result.accuracy}%</div>
                         </div>
                         <div class="history-stat">
-                            <div class="history-label">Time</div>
+                            <div>Time</div>
                             <div class="history-value">${result.time}s</div>
                         </div>
                     </div>
@@ -886,218 +1325,205 @@
             });
         }
 
-        // Show error analysis
-        function showErrorAnalysis() {
-            errorListElement.innerHTML = '';
-            
-            if (state.errorMap.size === 0) {
-                errorListElement.innerHTML = '<p>No errors made! Excellent typing!</p>';
-                return;
-            }
-            
-            // Convert error map to array and sort by frequency
-            const errorArray = Array.from(state.errorMap.entries());
-            errorArray.sort((a, b) => b[1] - a[1]);
-            
-            errorArray.forEach(([char, count]) => {
-                const errorItem = document.createElement('div');
-                errorItem.className = 'error-item';
-                errorItem.innerHTML = `
-                    <span>Mistyped "${char}"</span>
-                    <span>${count} time${count > 1 ? 's' : ''}</span>
-                `;
-                errorListElement.appendChild(errorItem);
-            });
+        // Save history to localStorage
+        function saveHistoryToStorage() {
+            localStorage.setItem('typingTestHistory', JSON.stringify(state.testHistory));
         }
 
-        // Handle text input
-        function handleInput(e) {
-            if (!state.isRunning || state.isFinished) return;
-            
-            const input = e.target.value;
-            const currentWord = state.words[state.currentWordIndex];
-            
-            // If backspace is pressed and we're at the beginning of a word
-            if (e.inputType === 'deleteContentBackward' && state.currentLetterIndex === 0 && state.currentWordIndex > 0) {
-                // Move to previous word
-                state.currentWordIndex--;
-                state.currentLetterIndex = state.words[state.currentWordIndex].letters.length;
-                textInput.value = '';
-                renderText();
-                return;
+        // Load history from localStorage
+        function loadHistoryFromStorage() {
+            const savedHistory = localStorage.getItem('typingTestHistory');
+            if (savedHistory) {
+                state.testHistory = JSON.parse(savedHistory);
+                updateHistoryDisplay();
             }
+        }
+
+        // Clear history
+        function clearHistory() {
+            state.testHistory = [];
+            saveHistoryToStorage();
+            updateHistoryDisplay();
+        }
+
+        // Share results
+        function shareResults() {
+            const resultWpm = resultWpmElement.textContent;
+            const resultAccuracy = resultAccuracyElement.textContent;
             
-            // If we've completed the current word
-            if (state.currentLetterIndex >= currentWord.letters.length) {
-                // Check if the next character is a space
-                if (input.endsWith(' ')) {
-                    // Move to next word
-                    state.currentWordIndex++;
-                    state.currentLetterIndex = 0;
-                    textInput.value = '';
-                    renderText();
-                    
-                    // Check if we've completed all words (for word goal mode)
-                    if (state.mode === 'words' && state.currentWordIndex >= state.wordGoal) {
-                        finishTest();
-                    }
-                }
-                return;
-            }
+            const shareText = `I just scored ${resultWpm} WPM with ${resultAccuracy} accuracy on this typing test! Try it yourself.`;
             
-            // Get the current expected character
-            const expectedChar = currentWord.letters[state.currentLetterIndex].char;
-            const actualChar = input.charAt(input.length - 1);
-            
-            // If no new character was added (e.g., backspace)
-            if (input.length <= state.currentLetterIndex) {
-                // Handle backspace - revert the status of the previous character
-                if (state.currentLetterIndex > 0) {
-                    state.currentLetterIndex--;
-                    currentWord.letters[state.currentLetterIndex].status = 'pending';
-                    
-                    // Update stats if we're correcting an error
-                    if (state.errors > 0) {
-                        state.errors--;
-                        errorsElement.textContent = state.errors;
-                    }
-                }
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Typing Test Results',
+                    text: shareText,
+                    url: window.location.href
+                });
             } else {
-                // A new character was typed
-                state.totalChars++;
-                
-                if (actualChar === expectedChar) {
-                    // Correct character
-                    currentWord.letters[state.currentLetterIndex].status = 'correct';
-                    state.correctChars++;
-                } else {
-                    // Incorrect character
-                    currentWord.letters[state.currentLetterIndex].status = 'incorrect';
-                    state.errors++;
-                    
-                    // Track error in error map
-                    if (state.errorMap.has(expectedChar)) {
-                        state.errorMap.set(expectedChar, state.errorMap.get(expectedChar) + 1);
-                    } else {
-                        state.errorMap.set(expectedChar, 1);
-                    }
-                    
-                    errorsElement.textContent = state.errors;
-                }
-                
-                state.currentLetterIndex++;
-                
-                // Update WPM and CPM in real-time
-                updateRealTimeStats();
-            }
-            
-            renderText();
-        }
-
-        // Update real-time statistics
-        function updateRealTimeStats() {
-            if (!state.startTime) return;
-            
-            const timeElapsed = (new Date() - state.startTime) / 1000; // in seconds
-            const wpm = Math.round((state.correctChars / 5) / (timeElapsed / 60));
-            const cpm = Math.round(state.correctChars / (timeElapsed / 60));
-            const accuracy = state.totalChars > 0 ? Math.round((state.correctChars / state.totalChars) * 100) : 100;
-            
-            wpmElement.textContent = wpm;
-            cpmElement.textContent = cpm;
-            accuracyElement.textContent = `${accuracy}%`;
-            
-            // Update progress bar for word goal mode
-            if (state.mode === 'words') {
-                const progress = (state.currentWordIndex / state.wordGoal) * 100;
-                progressBar.style.width = `${Math.min(progress, 100)}%`;
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('Results copied to clipboard!');
+                });
             }
         }
 
+        // Toggle theme
+function toggleTheme() {
+    const body = document.body;
+    const isLight = body.classList.contains('light-theme');
+    
+    if (isLight) {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+}
         // Set up event listeners
         function setupEventListeners() {
-            textInput.addEventListener('input', handleInput);
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
             
-            // Make the text display area clickable to focus the input
-            textDisplay.addEventListener('click', () => {
-                if (state.isRunning && !state.isFinished) {
-                    textInput.focus();
-                }
+            // Start test button
+            startTestButton.addEventListener('click', startTest);
+            
+            // Share results button
+            shareResultsButton.addEventListener('click', shareResults);
+            
+            // Mode selection buttons
+            timeTrialButton.addEventListener('click', () => {
+                timeTrialModal.classList.add('active');
             });
             
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('light-theme');
-                themeToggle.textContent = document.body.classList.contains('light-theme') ? 'Dark Mode' : 'Light Mode';
+            wordCountButton.addEventListener('click', () => {
+                wordCountModal.classList.add('active');
             });
             
-            startTestButton.addEventListener('click', () => {
-                loadNewText();
-                startTest();
+            codingModeButton.addEventListener('click', () => {
+                codingModeModal.classList.add('active');
             });
             
-            tryAgainButton.addEventListener('click', () => {
-                resetStats();
-                textInput.focus();
-                startTest();
+            // Modal close buttons
+            closeTimeTrial.addEventListener('click', () => {
+                timeTrialModal.classList.remove('active');
             });
             
-            shareResultsButton.addEventListener('click', () => {
-                // Simple share implementation
-                const wpm = resultWpmElement.textContent;
-                const accuracy = resultAccuracyElement.textContent;
-                alert(`I typed at ${wpm} WPM with ${accuracy} accuracy on Typing Speed Test!`);
+            closeWordCount.addEventListener('click', () => {
+                wordCountModal.classList.remove('active');
             });
             
-            timerModeSelect.addEventListener('change', () => {
-                const modeValue = timerModeSelect.value;
-                
-                if (modeValue === 'endless') {
-                    state.mode = 'endless';
-                    state.timeLeft = 999;
-                    state.totalTime = 999;
-                } else if (!isNaN(modeValue)) {
+            closeCodingMode.addEventListener('click', () => {
+                codingModeModal.classList.remove('active');
+            });
+            
+            // Time trial options
+            timeTrialOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = parseInt(option.getAttribute('data-value'));
+                    state.timeLeft = value;
+                    state.totalTime = value;
+                    timeTrialValue.textContent = `${value}s`;
+                    timeTrialModal.classList.remove('active');
+                    
+                    // Set mode to time trial
                     state.mode = 'time';
-                    state.timeLeft = parseInt(modeValue);
-                    state.totalTime = state.timeLeft;
-                } else {
+                    timeTrialButton.classList.add('active');
+                    wordCountButton.classList.remove('active');
+                    codingModeButton.classList.remove('active');
+                    
+                    resetStats();
+                });
+            });
+            
+            // Word count options
+            wordCountOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = parseInt(option.getAttribute('data-value'));
+                    state.wordGoal = value;
+                    wordCountValue.textContent = value;
+                    wordCountModal.classList.remove('active');
+                    
+                    // Set mode to word count
                     state.mode = 'words';
-                    state.wordGoal = parseInt(modeValue);
-                }
-                
-                resetStats();
+                    timeTrialButton.classList.remove('active');
+                    wordCountButton.classList.add('active');
+                    codingModeButton.classList.remove('active');
+                    
+                    resetStats();
+                });
             });
             
-            textCategorySelect.addEventListener('change', () => {
-                loadNewText();
+            // Coding mode options
+            codingModeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const value = option.getAttribute('data-value');
+                    const displayName = option.textContent;
+                    state.codingLanguage = value;
+                    codingModeValue.textContent = displayName;
+                    codingModeModal.classList.remove('active');
+                    
+                    // Set mode to coding
+                    state.mode = 'coding';
+                    timeTrialButton.classList.remove('active');
+                    wordCountButton.classList.remove('active');
+                    codingModeButton.classList.add('active');
+                    
+                    resetStats();
+                });
             });
             
+            // History button
             historyButton.addEventListener('click', () => {
-                displayHistory();
                 historyPanel.classList.add('active');
-                resultsElement.classList.remove('active');
             });
             
+            // Clear history button
+            clearHistoryButton.addEventListener('click', clearHistory);
+            
+            // Close history button
             closeHistoryButton.addEventListener('click', () => {
                 historyPanel.classList.remove('active');
             });
             
-            clearHistoryButton.addEventListener('click', () => {
-                if (confirm('Are you sure you want to clear all history?')) {
-                    state.testHistory = [];
-                    localStorage.removeItem('typingTestHistory');
-                    displayHistory();
+            // Reset button
+            resetButton.addEventListener('click', resetStats);
+            
+            // Text input handling
+            textInput.addEventListener('input', handleInput);
+            
+            // Prevent default behavior for certain keys
+            textInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    e.preventDefault();
                 }
             });
             
-            // Prevent spacebar from scrolling the page
-            window.addEventListener('keydown', (e) => {
-                if (e.key === ' ' && e.target === textInput) {
-                    e.preventDefault();
+            // Click on text display to focus input
+            textDisplay.addEventListener('click', () => {
+                textInput.focus();
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === timeTrialModal) {
+                    timeTrialModal.classList.remove('active');
+                }
+                if (e.target === wordCountModal) {
+                    wordCountModal.classList.remove('active');
+                }
+                if (e.target === codingModeModal) {
+                    codingModeModal.classList.remove('active');
+                }
+                if (e.target === historyPanel) {
+                    historyPanel.classList.remove('active');
                 }
             });
         }
 
-        // Initialize the app when the DOM is loaded
+        // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
