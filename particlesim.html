@@ -82,6 +82,24 @@
             transform: scale(0.98);
         }
 
+        .btn-icon {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--accent);
+            transition: all 0.4s ease;
+        }
+
+        .btn-icon:hover svg, .btn-icon:focus svg {
+            fill: var(--primary);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -314,6 +332,11 @@
     <div class="controls">
         <button class="btn" id="start-btn">Start Simulation</button>
         <button class="btn" id="settings-btn">Settings</button>
+        <button class="btn btn-icon" id="fullscreen-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+            </svg>
+        </button>
     </div>
 
     <!-- Stats Panel -->
@@ -409,6 +432,7 @@
         let particles = [];
         let animationId = null;
         let isRunning = false;
+        let isFullscreen = false;
         
         let settings = {
             particleCount: 60,
@@ -423,6 +447,7 @@
         const ctx = canvas.getContext('2d');
         const startBtn = document.getElementById('start-btn');
         const settingsBtn = document.getElementById('settings-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
         const settingsModal = document.getElementById('settings-modal');
         const closeModal = document.getElementById('close-modal');
         const applySettingsBtn = document.getElementById('apply-settings');
@@ -448,6 +473,56 @@
         const statBounceItem = document.getElementById('stat-bounce-item');
         const statSunSize = document.getElementById('stat-sun-size');
         const statSunItem = document.getElementById('stat-sun-item');
+
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            if (!isFullscreen) {
+                // Enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE/Edge
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        function updateFullscreenButton() {
+            const svg = fullscreenBtn.querySelector('svg');
+            if (isFullscreen) {
+                // Change to exit fullscreen icon
+                svg.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
+            } else {
+                // Change to enter fullscreen icon
+                svg.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+            }
+        }
+
+        // Fullscreen event listeners
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            isFullscreen = !!(document.fullscreenElement || document.mozFullScreenElement || 
+                             document.webkitFullscreenElement || document.msFullscreenElement);
+            updateFullscreenButton();
+        }
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -741,6 +816,7 @@
 
         startBtn.addEventListener('click', startSimulation);
         settingsBtn.addEventListener('click', openSettings);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
         closeModal.addEventListener('click', closeSettings);
         applySettingsBtn.addEventListener('click', applySettings);
 
@@ -770,11 +846,17 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                closeSettings();
+                if (isFullscreen) {
+                    toggleFullscreen();
+                } else {
+                    closeSettings();
+                }
             } else if (e.key === 'Enter' && settingsModal.style.display === 'flex') {
                 applySettings();
             } else if (e.key === 's' || e.key === 'S') {
                 startSimulation();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
             }
         });
 
