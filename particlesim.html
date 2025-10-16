@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Particle Physics Sim by h1m</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Montserrat:wght@300;400;500;600&display=swap">
+    <style>
+        :root {
+            --primary: #0a0a1a;
+            --secondary: #1a1a3a;
+            --accent: #00a8cc;
+            --accent-dark: #0088aa;
+            --text: #e0e0ff;
+            --text-dim: #a0a0cc;
+            --modal-bg: rgba(10, 20, 40, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .btn:hover, .btn:focus {
+            background: var(--accent);
+            color: var(--primary);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 168, 204, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 15px;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: var(--secondary);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--secondary);
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+        }
+
+        .select-input:focus {
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .toggle-container {
+            display: flex;
+            background: var(--secondary);
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 10px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .toggle-option.active {
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Stats Panel */
+        .stats-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--modal-bg);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 168, 204, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            max-width: 250px;
+            display: none;
+        }
+
+        .stats-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+        }
+
+        .stat-value {
+            color: var(--text);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+                bottom: 20px;
+            }
+            
+            .btn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .stats-panel {
+                top: 10px;
+                right: 10px;
+                max-width: 200px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .stats-panel {
+                max-width: 180px;
+                padding: 10px;
+            }
+            
+            .stats-title {
+                font-size: 1rem;
+            }
+            
+            .stat-item {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+    
+    <div class="controls">
+        <button class="btn" id="start-btn">Start Simulation</button>
+        <button class="btn" id="settings-btn">Settings</button>
+    </div>
+
+    <!-- Stats Panel -->
+    <div class="stats-panel" id="stats-panel">
+        <h3 class="stats-title">Live Stats</h3>
+        <div class="stat-item">
+            <span class="stat-label">Mode:</span>
+            <span class="stat-value" id="stat-mode">Flow</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Particles:</span>
+            <span class="stat-value" id="stat-particle-count">60</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Speed:</span>
+            <span class="stat-value" id="stat-particle-speed">50%</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Size:</span>
+            <span class="stat-value" id="stat-particle-size">3</span>
+        </div>
+        <div class="stat-item" id="stat-bounce-item">
+            <span class="stat-label">Bounce:</span>
+            <span class="stat-value" id="stat-bounce-factor">80%</span>
+        </div>
+        <div class="stat-item" id="stat-sun-item">
+            <span class="stat-label">Sun Size:</span>
+            <span class="stat-value" id="stat-sun-size">40</span>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Simulation Settings</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            
+            <div class="setting-group">
+                <label class="setting-label" for="particle-count">Particle Amount</label>
+                <div class="slider-container">
+                    <input type="range" min="10" max="200" value="60" class="slider" id="particle-count">
+                    <span class="slider-value" id="particle-count-value">60</span>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <label class="setting-label">Simulation Mode</label>
+                <div class="toggle-container">
+                    <div class="toggle-option active" data-value="flow">Flow</div>
+                    <div class="toggle-option" data-value="gravity">Gravity</div>
+                </div>
+            </div>
+            
+            <div class="setting-group" id="bounce-factor-group">
+                <label class="setting-label" for="bounce-factor">Bounce Factor</label>
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="80" class="slider" id="bounce-factor">
+                    <span class="slider-value" id="bounce-factor-value">80%</span>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <label class="setting-label" for="particle-speed">Particle Speed</label>
+                <div class="slider-container">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="particle-speed">
+                    <span class="slider-value" id="particle-speed-value">50%</span>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <label class="setting-label" for="particle-size">Particle Size</label>
+                <div class="slider-container">
+                    <input type="range" min="1" max="10" value="3" class="slider" id="particle-size">
+                    <span class="slider-value" id="particle-size-value">3</span>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <label class="setting-label" for="sun-size">Sun Size</label>
+                <div class="slider-container">
+                    <input type="range" min="10" max="100" value="40" class="slider" id="sun-size">
+                    <span class="slider-value" id="sun-size-value">40</span>
+                </div>
+            </div>
+            
+            <button class="btn" id="apply-settings" style="width: 100%; margin-top: 20px;">Apply Settings</button>
+        </div>
+    </div>
+
+    <script>
+        let particles = [];
+        let animationId = null;
+        let isRunning = false;
+        
+        let settings = {
+            particleCount: 60,
+            mode: 'flow',
+            bounceFactor: 0.8,
+            particleSpeed: 0.5,
+            particleSize: 3,
+            sunSize: 40
+        };
+
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('start-btn');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeModal = document.getElementById('close-modal');
+        const applySettingsBtn = document.getElementById('apply-settings');
+        const particleCountSlider = document.getElementById('particle-count');
+        const particleCountValue = document.getElementById('particle-count-value');
+        const bounceFactorGroup = document.getElementById('bounce-factor-group');
+        const bounceFactorSlider = document.getElementById('bounce-factor');
+        const bounceFactorValue = document.getElementById('bounce-factor-value');
+        const particleSpeedSlider = document.getElementById('particle-speed');
+        const particleSpeedValue = document.getElementById('particle-speed-value');
+        const particleSizeSlider = document.getElementById('particle-size');
+        const particleSizeValue = document.getElementById('particle-size-value');
+        const sunSizeSlider = document.getElementById('sun-size');
+        const sunSizeValue = document.getElementById('sun-size-value');
+        
+        // Stats panel elements
+        const statsPanel = document.getElementById('stats-panel');
+        const statMode = document.getElementById('stat-mode');
+        const statParticleCount = document.getElementById('stat-particle-count');
+        const statParticleSpeed = document.getElementById('stat-particle-speed');
+        const statParticleSize = document.getElementById('stat-particle-size');
+        const statBounceFactor = document.getElementById('stat-bounce-factor');
+        const statBounceItem = document.getElementById('stat-bounce-item');
+        const statSunSize = document.getElementById('stat-sun-size');
+        const statSunItem = document.getElementById('stat-sun-item');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < settings.particleCount; i++) {
+                particles.push(createParticle());
+            }
+        }
+
+        function createParticle() {
+            const speed = settings.particleSpeed * 2;
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * settings.particleSize + 1,
+                speedX: (Math.random() - 0.5) * speed,
+                speedY: (Math.random() - 0.5) * speed,
+                color: `rgba(0, 168, 204, ${Math.random() * 0.5 + 0.1})`,
+                absorbed: false,
+                absorptionProgress: 0
+            };
+        }
+
+        function drawSun() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Create radial gradient for sun
+            const gradient = ctx.createRadialGradient(
+                centerX, centerY, 0,
+                centerX, centerY, settings.sunSize
+            );
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.3, 'rgba(255, 200, 100, 1)');
+            gradient.addColorStop(0.7, 'rgba(255, 150, 50, 0.8)');
+            gradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+            
+            // Draw sun
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, settings.sunSize, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Add sun glow effect
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, settings.sunSize * 1.5, 0, Math.PI * 2);
+            const glowGradient = ctx.createRadialGradient(
+                centerX, centerY, settings.sunSize,
+                centerX, centerY, settings.sunSize * 1.5
+            );
+            glowGradient.addColorStop(0, 'rgba(255, 150, 50, 0.3)');
+            glowGradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+            ctx.fillStyle = glowGradient;
+            ctx.fill();
+        }
+
+        function updateStatsPanel() {
+            statMode.textContent = settings.mode.charAt(0).toUpperCase() + settings.mode.slice(1);
+            statParticleCount.textContent = settings.particleCount;
+            statParticleSpeed.textContent = `${Math.round(settings.particleSpeed * 100)}%`;
+            statParticleSize.textContent = settings.particleSize;
+            statBounceFactor.textContent = `${Math.round(settings.bounceFactor * 100)}%`;
+            statSunSize.textContent = settings.sunSize;
+            
+            // Show/hide stats based on mode
+            if (settings.mode === 'gravity') {
+                statBounceItem.style.display = 'flex';
+                statSunItem.style.display = 'flex';
+            } else {
+                statBounceItem.style.display = 'none';
+                statSunItem.style.display = 'none';
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 26, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw sun in gravity mode
+            if (settings.mode === 'gravity') {
+                drawSun();
+            }
+            
+            // Update and draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                
+                if (settings.mode === 'flow') {
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+                    
+                    if (particle.x < 0) particle.x = canvas.width;
+                    if (particle.x > canvas.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = canvas.height;
+                    if (particle.y > canvas.height) particle.y = 0;
+                } else if (settings.mode === 'gravity') {
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    
+                    const dx = centerX - particle.x;
+                    const dy = centerY - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Check if particle is being absorbed by the sun
+                    if (distance < settings.sunSize && !particle.absorbed) {
+                        particle.absorbed = true;
+                    }
+                    
+                    // Handle absorption animation
+                    if (particle.absorbed) {
+                        particle.absorptionProgress += 0.02;
+                        
+                        // Remove particle when absorption is complete
+                        if (particle.absorptionProgress >= 1) {
+                            particles.splice(i, 1);
+                            
+                            // Add a new particle to maintain count
+                            if (particles.length < settings.particleCount) {
+                                particles.push(createParticle());
+                            }
+                            continue;
+                        }
+                    } else {
+                        // Apply gravity force if not absorbed
+                        if (distance > settings.sunSize) {
+                            const force = 0.0005 * settings.particleSpeed;
+                            particle.speedX += (dx / distance) * force;
+                            particle.speedY += (dy / distance) * force;
+                        }
+                        
+                        // Move particle
+                        particle.x += particle.speedX;
+                        particle.y += particle.speedY;
+                        
+                        // Bounce off edges
+                        if (particle.x < 0 || particle.x > canvas.width) {
+                            particle.speedX *= -settings.bounceFactor;
+                            particle.x = particle.x < 0 ? 0 : canvas.width;
+                        }
+                        if (particle.y < 0 || particle.y > canvas.height) {
+                            particle.speedY *= -settings.bounceFactor;
+                            particle.y = particle.y < 0 ? 0 : canvas.height;
+                        }
+                        
+                        // Apply friction
+                        particle.speedX *= 0.995;
+                        particle.speedY *= 0.995;
+                    }
+                }
+                
+                // Draw particle with absorption effect
+                if (!particle.absorbed || particle.absorptionProgress < 1) {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    
+                    // Apply absorption effect - fade out and shrink
+                    if (particle.absorbed) {
+                        const alpha = 0.1 * (1 - particle.absorptionProgress);
+                        const size = particle.size * (1 - particle.absorptionProgress);
+                        ctx.fillStyle = `rgba(0, 168, 204, ${alpha})`;
+                        ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+                    } else {
+                        ctx.fillStyle = particle.color;
+                    }
+                    
+                    ctx.fill();
+                }
+            }
+            
+            if (settings.mode === 'flow' && Math.random() < 0.005) {
+                const randomParticle = particles[Math.floor(Math.random() * particles.length)];
+                randomParticle.speedX *= -1;
+                randomParticle.speedY *= -1;
+            }
+            
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function startSimulation() {
+            if (!isRunning) {
+                isRunning = true;
+                startBtn.textContent = 'Stop Simulation';
+                statsPanel.style.display = 'block';
+                updateStatsPanel();
+                initParticles();
+                animate();
+            } else {
+                stopSimulation();
+            }
+        }
+
+        function stopSimulation() {
+            isRunning = false;
+            startBtn.textContent = 'Start Simulation';
+            statsPanel.style.display = 'none';
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            ctx.fillStyle = 'rgba(10, 10, 26, 1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function openSettings() {
+            settingsModal.style.display = 'flex';
+            particleCountSlider.value = settings.particleCount;
+            particleCountValue.textContent = settings.particleCount;
+            
+            // Set toggle state based on current mode
+            const toggleOptions = document.querySelectorAll('.toggle-option');
+            toggleOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.value === settings.mode) {
+                    option.classList.add('active');
+                }
+            });
+            
+            bounceFactorSlider.value = settings.bounceFactor * 100;
+            bounceFactorValue.textContent = `${Math.round(settings.bounceFactor * 100)}%`;
+            particleSpeedSlider.value = settings.particleSpeed * 100;
+            particleSpeedValue.textContent = `${Math.round(settings.particleSpeed * 100)}%`;
+            particleSizeSlider.value = settings.particleSize;
+            particleSizeValue.textContent = settings.particleSize;
+            sunSizeSlider.value = settings.sunSize;
+            sunSizeValue.textContent = settings.sunSize;
+            
+            toggleBounceFactorVisibility();
+        }
+
+        function closeSettings() {
+            settingsModal.style.display = 'none';
+        }
+
+        function applySettings() {
+            settings.particleCount = parseInt(particleCountSlider.value);
+            
+            // Get mode from active toggle option
+            const activeToggle = document.querySelector('.toggle-option.active');
+            settings.mode = activeToggle.dataset.value;
+            
+            settings.bounceFactor = parseInt(bounceFactorSlider.value) / 100;
+            settings.particleSpeed = parseInt(particleSpeedSlider.value) / 100;
+            settings.particleSize = parseInt(particleSizeSlider.value);
+            settings.sunSize = parseInt(sunSizeSlider.value);
+            
+            // Update stats panel if simulation is running
+            if (isRunning) {
+                updateStatsPanel();
+                stopSimulation();
+                startSimulation();
+            }
+            
+            closeSettings();
+        }
+
+        function toggleBounceFactorVisibility() {
+            const activeToggle = document.querySelector('.toggle-option.active');
+            if (activeToggle.dataset.value === 'gravity') {
+                bounceFactorGroup.style.display = 'block';
+            } else {
+                bounceFactorGroup.style.display = 'none';
+            }
+        }
+
+        // Toggle option click handler
+        function handleToggleClick(e) {
+            if (e.target.classList.contains('toggle-option')) {
+                const parent = e.target.parentElement;
+                const options = parent.querySelectorAll('.toggle-option');
+                
+                options.forEach(option => {
+                    option.classList.remove('active');
+                });
+                
+                e.target.classList.add('active');
+                
+                toggleBounceFactorVisibility();
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            ctx.fillStyle = 'rgba(10, 10, 26, 1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        startBtn.addEventListener('click', startSimulation);
+        settingsBtn.addEventListener('click', openSettings);
+        closeModal.addEventListener('click', closeSettings);
+        applySettingsBtn.addEventListener('click', applySettings);
+
+        // Add event listener for toggle options
+        const toggleContainer = document.querySelector('.toggle-container');
+        toggleContainer.addEventListener('click', handleToggleClick);
+
+        particleCountSlider.addEventListener('input', () => {
+            particleCountValue.textContent = particleCountSlider.value;
+        });
+
+        bounceFactorSlider.addEventListener('input', () => {
+            bounceFactorValue.textContent = `${bounceFactorSlider.value}%`;
+        });
+
+        particleSpeedSlider.addEventListener('input', () => {
+            particleSpeedValue.textContent = `${particleSpeedSlider.value}%`;
+        });
+
+        particleSizeSlider.addEventListener('input', () => {
+            particleSizeValue.textContent = particleSizeSlider.value;
+        });
+
+        sunSizeSlider.addEventListener('input', () => {
+            sunSizeValue.textContent = sunSizeSlider.value;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSettings();
+            } else if (e.key === 'Enter' && settingsModal.style.display === 'flex') {
+                applySettings();
+            } else if (e.key === 's' || e.key === 'S') {
+                startSimulation();
+            }
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = Math.abs(touchEndX - touchStartX);
+            const diffY = Math.abs(touchEndY - touchStartY);
+            
+            if (diffX < 10 && diffY < 10) {
+                if (settingsModal.style.display === 'flex' && 
+                    !e.target.closest('.modal-content')) {
+                    closeSettings();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
