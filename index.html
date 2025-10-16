@@ -3,579 +3,710 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Walif's Portfolio Hub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="shortcut icon" href="https://images.unsplash.com/photo-1631519952398-5b1d76b946e8?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" type="image/png">
+    <title>Walif's Portfolio</title>
     <style>
-        /* Base Styles & Variables */
         :root {
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-            --accent: #4a8eff;
-            --accent-light: #6ba2ff;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --transition: all 0.5s ease;
+            --bg-color: #000000;
+            --text-color: #33cc33;
+            --accent-color: #66ff66;
+            --font-family: 'Courier New', Courier, monospace;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            min-height: 100vh;
             overflow-x: hidden;
-        }
-
-        /* Landing Page */
-        #landing {
-            height: 100vh;
+            position: relative;
+            line-height: 1.5;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+            padding: 20px;
         }
 
-        .logo {
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .tagline {
-            margin-bottom: 3rem;
-            max-width: 600px;
-            color: var(--text-secondary);
-        }
-
-        .explore-btn {
-            padding: 1rem 2.5rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 20px rgba(74, 142, 255, 0.3);
-        }
-
-        .explore-btn:hover {
-            background-color: var(--accent-light);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(74, 142, 255, 0.5);
-        }
-
-        /* Main Content Area */
-        #content {
-            max-width: 1200px;
+        /* Main container - centered */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 4rem 2rem;
         }
 
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent);
+        /* Terminal container */
+        .terminal-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Terminal window */
+        .terminal {
+            width: 100%;
+            height: 60vh;
+            background-color: rgba(10, 10, 10, 0.9);
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(51, 204, 51, 0.3);
+            
+        }
+
+        /* Terminal content */
+        .terminal-content {
+            line-height: 1.5;
+        }
+
+        /* Blinking cursor */
+        .cursor {
             display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: var(--text-color);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
         }
 
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
-        .project-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        /* Command buttons */
+        .command-btn {
+            background: transparent;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            margin: 5px;
             cursor: pointer;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            font-family: var(--font-family);
+            transition: all 0.2s;
+            border-radius: 3px;
         }
 
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        .command-btn:hover {
+            background-color: rgba(51, 204, 51, 0.1);
         }
 
-        .card-img {
-            height: 200px;
-            background-color: #2a2a2a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 3rem;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-desc {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            flex-grow: 1;
-        }
-
-        .card-link {
-            color: var(--accent);
+        /* Project links */
+        .project-link {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 3px 8px;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
             text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            transition: var(--transition);
+            transition: all 0.2s;
+            border-radius: 3px;
         }
 
-        .card-link i {
-            margin-left: 0.5rem;
-            transition: var(--transition);
+        .project-link:hover {
+            background-color: rgba(51, 204, 51, 0.1);
         }
 
-        .card-link:hover {
-            color: var(--accent-light);
+        /* Project list styles */
+        .project-item {
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 1px solid var(--text-color);
         }
 
-        .card-link:hover i {
-            transform: translateX(5px);
-        }
-
-        /* About Section */
-        #about {
-            margin-bottom: 4rem;
-        }
-
-        .about-content {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .about-text {
-            margin-bottom: 2rem;
-            color: var(--text-secondary);
-        }
-
-        .highlight {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Skills Section */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .skill-category {
-            background-color: #2a2a2a;
-            border-radius: 8px;
-            padding: 1.5rem;
-        }
-
-        .skill-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .skill-list {
-            list-style-type: none;
-        }
-
-        .skill-list li {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .skill-list li:before {
-            content: "•";
-            color: var(--accent);
+        .project-title {
             font-weight: bold;
-            margin-right: 0.5rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
         }
 
-        /* Contact Section */
-        #contact {
-            margin-bottom: 4rem;
+        .project-number {
+            color: var(--accent-color);
+            font-weight: bold;
         }
 
-        .contact-content {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        /* Virtual keyboard */
+        #virtual-keyboard {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.9);
+            
+            border-radius: 5px;
+            margin-top: 20px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+        }
+
+        .keyboard-key {
+            background-color: rgba(30, 30, 30, 0.9)
+            color: var(--text-color);
+            padding: 8px 5px;
             text-align: center;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: var(--font-family);
+            font-size: 0.8rem;
+            transition: all 0.1s;
+            user-select: none;
         }
 
-        .contact-text {
-            margin-bottom: 2rem;
-            color: var(--text-secondary);
+        .keyboard-key:hover {
+            background-color: rgba(51, 204, 51, 0.2);
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
+        .keyboard-key:active, .keyboard-key.active {
+            background-color: rgba(51, 204, 51, 0.4);
+            transform: scale(0.95);
         }
 
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background-color: #2a2a2a;
-            border-radius: 50%;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            transition: var(--transition);
-            text-decoration: none;
+        .keyboard-key.space {
+            grid-column: span 4;
         }
 
-        .social-link:hover {
-            background-color: var(--accent);
-            transform: translateY(-5px);
+        .keyboard-key.enter {
+            grid-column: span 2;
         }
 
-        /* Responsive Design */
+        .keyboard-key.backspace {
+            grid-column: span 2;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .terminal {
+                height: 50vh;
+            }
+            
+            #virtual-keyboard {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
-            .logo {
-                font-size: 2rem;
+            .terminal {
+                height: 45vh;
             }
-            
-            .projects-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
+
+            #virtual-keyboard {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 3px;
+                padding: 5px;
             }
-            
-            .skills-grid {
-                grid-template-columns: 1fr;
+
+            .keyboard-key {
+                padding: 6px 3px;
+                font-size: 0.7rem;
+            }
+
+            .keyboard-key.space {
+                grid-column: span 3;
+            }
+
+            .keyboard-key.enter {
+                grid-column: span 2;
+            }
+
+            .keyboard-key.backspace {
+                grid-column: span 2;
             }
         }
 
         @media (max-width: 480px) {
-            #landing {
-                padding: 1rem;
+            body {
+                padding: 10px;
             }
             
-            .logo {
-                font-size: 1.8rem;
+            .terminal {
+                height: 40vh;
+                padding: 15px;
             }
-            
-            .tagline {
-                font-size: 0.9rem;
+
+            #virtual-keyboard {
+                grid-template-columns: repeat(5, 1fr);
             }
-            
-            .explore-btn {
-                padding: 0.8rem 2rem;
-                font-size: 1rem;
-            }
-            
-            .section-title {
-                font-size: 1.7rem;
-            }
-            
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .social-links {
-                flex-wrap: wrap;
+
+            .keyboard-key {
+                padding: 5px 2px;
+                font-size: 0.6rem;
             }
         }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(18, 18, 18, 0.95);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-
+        /* Boot animation styles */
+        .boot-line {
+            margin-bottom: 8px;
         }
 
-        nav.visible {
-            transform: translateY(0);
+        .system-line {
+            color: var(--accent-color);
         }
 
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent);
+        .command-line {
+            color: var(--text-color);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
+        .output-line {
+            color: #cccccc;
         }
 
-        .nav-link {
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: var(--transition);
+        .error-line {
+            color: #ff3333;
         }
 
-        .nav-link:hover {
-            color: var(--accent);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background-color: #0a0a0a;
-            color: var(--text-secondary);
-            margin-top: 4rem;
-        }
-
-        /* Animation for content */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .success-line {
+            color: var(--accent-color);
         }
     </style>
 </head>
 <body>
-    <!-- Landing Page -->
-    <section id="landing">
-        <div class="logo">Walif</div>
-        <p class="tagline">Content Creator & Editor | Bringing ideas to life through visual storytelling</p>
-        <button class="explore-btn" id="exploreBtn">Explore</button>
-    </section>
+    <div class="main-container">
+        <!-- Terminal Container -->
+        <div class="terminal-container">
+            <!-- Terminal window -->
+            <div class="terminal">
+                <div class="terminal-content" id="terminal-content">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
 
-    <!-- Navigation -->
-    <nav id="nav">
-        <div class="nav-logo">Walif</div>
-        <div class="nav-links">
-            <a href="#projects" class="nav-link">Projects</a>
-            <a href="#about" class="nav-link">About</a>
-            <a href="#contact" class="nav-link">Contact</a>
+            <!-- Virtual keyboard - VISIBLE ON ALL DEVICES -->
+            <div id="virtual-keyboard">
+                <!-- Keyboard keys will be populated by JavaScript -->
+            </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Main Content -->
-    <main id="content">
-        <!-- Projects Section -->
-        <section id="projects">
-            <h2 class="section-title fade-in">My Projects</h2>
-            <div class="projects-grid">
-                <!-- Project Card 1 -->
-                <div class="project-card fade-in">
-                    <div class="card-img">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">Time Conversion Tool</h3>
-                        <p class="card-desc">A utility for converting between different time zones and formats with a clean UI.</p>
-                        <a href="timeConverter.html" target="_blank" rel="noopener norefferer" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <!-- Project Card 2 -->
-                <div class="project-card fade-in">
-                    <div class="card-img">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">QR and Barcode Generator</h3>
-                        <p class="card-desc">Transform text, links, or data into sleek scannable codes in one click.</p>
-                        <a href="qrgenerator.html" target="_blank" rel="noopener norefferer" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <!-- Project Card 3 -->
-                <div class="project-card fade-in">
-                    <div class="card-img">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">Expence Tracker</h3>
-                        <p class="card-desc">A Simple Way to Track Your Expenses and Take Control of Your Money</p>
-                        <a href="expencetracker.html" target="_blank" rel="noopener norefferer" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <!-- Project Card 4 -->
-                <div class="project-card fade-in">
-                    <div class="card-img">
-                        <i class="fas fa-weight-scale"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">BMI Calculator</h3>
-                        <p class="card-desc">Calculate BMI , Track Wellness</p>
-                        <a href="bmicalc.html" target="_blank" rel="noopener norefferer" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                  <!--Project Card 5-->
-                  <div class="project-card fade-in">
-                    <div class="card-img">
-                        <i class="fas fa-atom"></i>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">Particle Physics Sim</h3>
-                        <p class="card-desc">Simulate flow and gravity inside your viewport</p>
-                        <a href="particlesim.html" target="_blank" rel="noopener norefferer" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                
-               
-                 <!--end cards edititable-->
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about">
-            <h2 class="section-title fade-in">About Me</h2>
-            <div class="about-content fade-in">
-                <p class="about-text">
-                    Hello everyone, thank you for allowing me to introduce myself. My name is <span class="highlight">Walif Mohian</span>. I am 18 years old and I'm from Sylhet,Bangladesh. I am a content creator and editor passionate about video editing and creating engaging digital experiences.
-                </p>
-                <p class="about-text">
-                    With a keen eye for detail and a creative mindset, I specialize in producing content that resonates with audiences and communicates messages effectively through various media formats.
-                </p>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills">
-            <h2 class="section-title fade-in">Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-category fade-in">
-                    <h3 class="skill-title">Content Creation</h3>
-                    <ul class="skill-list">
-                        <li>Video Production</li>
-                        <li>Photo Editing</li>
-                        <li>Storyboarding</li>
-                        <li>Content Strategy</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category fade-in">
-                    <h3 class="skill-title">Video Editing</h3>
-                    <ul class="skill-list">
-                        <li>Adobe Premiere Pro</li>
-                        <li>Final Cut Pro</li>
-                        <li>Color Grading</li>
-                        <li>Motion Graphics</li>
-                    </ul>
-                </div>
-
-                <div class="skill-category fade-in">
-                    <h3 class="skill-title">Other Skills</h3>
-                    <ul class="skill-list">
-                        <li>Photography</li>
-                        <li>Graphic Design</li>
-                        <li>Social Media Management</li>
-                        <li>Creative Direction</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact">
-            <h2 class="section-title fade-in">Contact Me</h2>
-            <div class="contact-content fade-in">
-                <p class="contact-text">Feel free to reach out for collaborations or just to say hello!</p>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2025 WALIF MOHIAN All rights reserved.</p>
-    </footer>
-
+    <!-- Project data - EDIT THIS SECTION TO ADD/MODIFY PROJECTS -->
     <script>
-        // Explore button functionality
-        document.getElementById('exploreBtn').addEventListener('click', function() {
-            document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
-        });
+        // PROJECT DATA - EDIT BELOW TO ADD OR MODIFY PROJECTS
+        const projects = [
+            { 
+                title: "Time Conversion Tool", 
+                subtitle: "A utility for converting between different time zones and formats with a clean UI.", 
+                link: "timeConverter.html" 
+            },
+            { 
+                title: "QR and Barcode Generator", 
+                subtitle: "Transform text, links, or data into sleek scannable codes in one click.", 
+                link: "qrgenerator.html" 
+            },
+            { 
+                title: "Expense Tracker", 
+                subtitle: "A Simple Way to Track Your Expenses and Take Control of Your Money.", 
+                link: "expencetracker.html" 
+            },
+            { 
+                title: "BMI Calculator", 
+                subtitle: "Calculate BMI, Track Wellness.", 
+                link: "bmicalc.html" 
+            },
+            { 
+                title: "Particle Physics Simulator", 
+                subtitle: "Simulate Physics in particles inside your vieport", 
+                link: "particlesim.html" 
+            },
+            // ADD MORE PROJECTS HERE BY COPYING THE ABOVE FORMAT
+        ];
+    </script>
 
-        // Navigation show/hide
-        const nav = document.getElementById('nav');
-        const landing = document.getElementById('landing');
-        
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > landing.offsetHeight / 2) {
-                nav.classList.add('visible');
-            } else {
-                nav.classList.remove('visible');
+    <!-- Main application script -->
+    <script>
+        // DOM Elements
+        const terminalContent = document.getElementById('terminal-content');
+        const virtualKeyboard = document.getElementById('virtual-keyboard');
+
+        // State variables
+        let isBooting = true;
+        let isStarted = false;
+        let isProjectsView = false;
+        let currentLine = 0;
+        let inputBuffer = '';
+
+        // Type text with animation
+        function typeText(text, element, delay = 30, callback = null) {
+            let i = 0;
+            const timer = setInterval(() => {
+                element.innerHTML += text.charAt(i);
+                i++;
+                if (i > text.length - 1) {
+                    clearInterval(timer);
+                    if (callback) callback();
+                }
+            }, delay);
+        }
+
+        // Add line to terminal
+        function addLine(text, delay = 0, typingDelay = 30, className = "") {
+            setTimeout(() => {
+                const line = document.createElement('div');
+                if (className) line.className = className;
+                terminalContent.appendChild(line);
+                typeText(text, line, typingDelay, () => {
+                    // Scroll to bottom
+                    terminalContent.scrollTop = terminalContent.scrollHeight;
+                });
+            }, delay);
+        }
+
+        // Add command buttons
+        function addCommandButtons() {
+            const commands = ['about', 'projects', 'contact', 'help'];
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.marginTop = '15px';
+            buttonContainer.style.marginBottom = '15px';
+            
+            commands.forEach(cmd => {
+                const button = document.createElement('button');
+                button.className = 'command-btn';
+                button.textContent = cmd;
+                button.addEventListener('click', () => {
+                    handleCommand(cmd);
+                });
+                buttonContainer.appendChild(button);
+            });
+            
+            terminalContent.appendChild(buttonContainer);
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+        }
+
+        // Display projects in the requested format
+        function displayProjects() {
+            addLine('PROJECTS:', 0, 20, 'success-line');
+            
+            projects.forEach((project, index) => {
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item';
+                
+                const projectTitle = document.createElement('div');
+                projectTitle.className = 'project-title';
+                projectTitle.innerHTML = `<span class="project-number">${index + 1}.</span> ${project.title}`;
+                
+                const projectLink = document.createElement('a');
+                projectLink.className = 'project-link';
+                projectLink.href = project.link;
+                projectLink.textContent = project.link;
+                projectLink.target = '_blank';
+                
+                projectItem.appendChild(projectTitle);
+                projectItem.appendChild(projectLink);
+                
+                terminalContent.appendChild(projectItem);
+            });
+            
+            // Add instruction for keyboard navigation
+            const instruction = document.createElement('div');
+            instruction.className = 'output-line';
+            instruction.style.marginTop = '15px';
+            instruction.style.fontStyle = 'italic';
+            instruction.textContent = 'Type a project number and press Enter to open it.';
+            terminalContent.appendChild(instruction);
+            
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+        }
+
+        // Handle commands
+        function handleCommand(cmd) {
+            // Clear existing buttons
+            const buttons = document.querySelectorAll('.command-btn');
+            buttons.forEach(btn => btn.remove());
+            
+            // Add the command that was executed
+            const commandLine = document.createElement('div');
+            commandLine.className = 'command-line';
+            commandLine.textContent = '> ' + cmd;
+            terminalContent.appendChild(commandLine);
+            
+            switch(cmd) {
+                case 'about':
+                    isProjectsView = false;
+                    addLine('Accessing profile...', 0, 20, 'system-line');
+                    setTimeout(() => {
+                        addLine('Name: Walif Mohian', 0, 20, 'output-line');
+                        addLine('Age: 18', 0, 20, 'output-line');
+                        addLine('Location: Sylhet, Bangladesh', 0, 20, 'output-line');
+                        addLine('Role: Content Creator & Editor', 0, 20, 'output-line');
+                        addLine('Description: Passionate about video editing and creating engaging digital experiences.', 0, 20, 'output-line');
+                        addLine('Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', 0, 20, 'output-line');
+                        addLine('        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', 0, 20, 'output-line');
+                        addLine('        Photography, Graphic Design, Social Media Management, Creative Direction', 0, 20, 'output-line');
+                        setTimeout(() => addCommandButtons(), 500);
+                    }, 500);
+                    break;
+                    
+                case 'projects':
+                    isProjectsView = true;
+                    addLine('Loading projects...', 0, 20, 'system-line');
+                    setTimeout(() => {
+                        displayProjects();
+                        setTimeout(() => addCommandButtons(), 500);
+                    }, 500);
+                    break;
+                    
+                case 'contact':
+                    isProjectsView = false;
+                    addLine('Accessing contact directory...', 0, 20, 'system-line');
+                    setTimeout(() => {
+                        addLine('GitHub: [github.com/iswalif]', 0, 20, 'output-line');
+                        addLine('Fiverr: [fiverr.com/wcreatezz]', 0, 20, 'output-line');
+                        addLine('Email: [walif.services@gmail.com]', 0, 20, 'output-line');
+                        setTimeout(() => addCommandButtons(), 500);
+                    }, 500);
+                    break;
+                    
+                case 'help':
+                    isProjectsView = false;
+                    addLine('Available commands:', 0, 20, 'success-line');
+                    addLine('about - View profile information', 0, 20, 'output-line');
+                    addLine('projects - View project portfolio', 0, 20, 'output-line');
+                    addLine('contact - Get contact information', 0, 20, 'output-line');
+                    addLine('help - Display this help message', 0, 20, 'output-line');
+                    setTimeout(() => addCommandButtons(), 500);
+                    break;
+                    
+                default:
+                    // Check if it's a project number when in projects view
+                    if (isProjectsView && !isNaN(cmd) && cmd >= 1 && cmd <= projects.length) {
+                        const projectIndex = parseInt(cmd) - 1;
+                        const project = projects[projectIndex];
+                        addLine(`Opening project: ${project.title}`, 0, 20, 'system-line');
+                        setTimeout(() => {
+                            window.open(project.link, '_blank');
+                            setTimeout(() => addCommandButtons(), 500);
+                        }, 500);
+                    } else {
+                        addLine(`Command '${cmd}' not recognized. Type 'help' for available commands.`, 0, 20, 'error-line');
+                        setTimeout(() => addCommandButtons(), 500);
+                    }
+                    break;
+            }
+        }
+
+        // Create virtual keyboard
+        function createVirtualKeyboard() {
+            const keyboardLayout = [
+                ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+                ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+                ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+                ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+                ['space', 'backspace', 'enter']
+            ];
+            
+            // Clear any existing content
+            virtualKeyboard.innerHTML = '';
+            
+            keyboardLayout.forEach(row => {
+                row.forEach(key => {
+                    const keyElement = document.createElement('div');
+                    keyElement.className = 'keyboard-key';
+                    keyElement.textContent = key;
+                    
+                    if (key === 'space') {
+                        keyElement.classList.add('space');
+                        keyElement.textContent = 'Space';
+                    } else if (key === 'backspace') {
+                        keyElement.classList.add('backspace');
+                        keyElement.textContent = 'Backspace';
+                    } else if (key === 'enter') {
+                        keyElement.classList.add('enter');
+                        keyElement.textContent = 'Enter';
+                    }
+                    
+                    keyElement.addEventListener('click', () => {
+                        handleVirtualKeyPress(key);
+                        // Visual feedback
+                        keyElement.classList.add('active');
+                        setTimeout(() => {
+                            keyElement.classList.remove('active');
+                        }, 150);
+                    });
+                    
+                    virtualKeyboard.appendChild(keyElement);
+                });
+            });
+            
+            // Make sure keyboard is visible
+            virtualKeyboard.style.display = 'grid';
+        }
+
+        // Handle virtual keyboard key presses
+        function handleVirtualKeyPress(key) {
+            if (!isStarted) return;
+            
+            switch(key) {
+                case 'backspace':
+                    inputBuffer = inputBuffer.slice(0, -1);
+                    break;
+                case 'enter':
+                    if (inputBuffer.trim() !== '') {
+                        // Remove cursor from current line
+                        const currentCursor = document.querySelector('.cursor');
+                        if (currentCursor) currentCursor.remove();
+                        
+                        // Handle the command
+                        handleCommand(inputBuffer.trim());
+                        
+                        // Reset input buffer
+                        inputBuffer = '';
+                        
+                        // Add new cursor line
+                        const newCursorLine = document.createElement('div');
+                        newCursorLine.style.marginTop = '10px';
+                        newCursorLine.innerHTML = '> <span class="cursor"></span>';
+                        terminalContent.appendChild(newCursorLine);
+                    }
+                    break;
+                case 'space':
+                    inputBuffer += ' ';
+                    break;
+                default:
+                    inputBuffer += key;
+                    break;
             }
             
-            // Check if elements are in viewport for animation
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('visible');
-                }
-            });
-        });
+            updateCursorLine();
+        }
 
-        // Initialize fade-in elements check on page load
-        window.addEventListener('load', function() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('visible');
+        // Update cursor line with current input buffer
+        function updateCursorLine() {
+            const cursorLine = document.querySelector('div:has(> .cursor)');
+            if (cursorLine) {
+                cursorLine.innerHTML = '> ' + inputBuffer + '<span class="cursor"></span>';
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+            }
+        }
+
+        // Boot sequence
+        function bootSequence() {
+            const bootLines = [
+                {text: "Initializing system...", type: "system"},
+                {text: "Loading kernel modules...", type: "system"},
+                {text: "Mounting filesystems...", type: "system"},
+                {text: "Starting network services...", type: "system"},
+                {text: "Launching security protocols...", type: "system"},
+                {text: "System initialized.", type: "success"},
+                {text: "Press [Start] to continue.", type: "system"}
+            ];
+            
+            bootLines.forEach((line, index) => {
+                let className = "boot-line";
+                if (line.type === "system") className += " system-line";
+                if (line.type === "success") className += " success-line";
+                
+                addLine(line.text, index * 600, 30, className);
+            });
+            
+            // Add Start button after boot sequence
+            setTimeout(() => {
+                const startButton = document.createElement('button');
+                startButton.className = 'command-btn';
+                startButton.textContent = 'Start';
+                startButton.style.marginTop = '15px';
+                startButton.addEventListener('click', startTerminal);
+                terminalContent.appendChild(startButton);
+                
+                // Also allow Enter key to start
+                document.addEventListener('keydown', function startOnEnter(e) {
+                    if (e.key === 'Enter' && isBooting) {
+                        startTerminal();
+                        document.removeEventListener('keydown', startOnEnter);
+                    }
+                });
+            }, bootLines.length * 600);
+        }
+
+        // Start terminal after boot
+        function startTerminal() {
+            isBooting = false;
+            isStarted = true;
+            
+            // Clear terminal
+            terminalContent.innerHTML = '';
+            
+            // Show available commands
+            addLine('Welcome to Walif\'s Portfolio Terminal', 0, 20, 'success-line');
+            addLine('Type a command or click a button below:', 0, 20, 'system-line');
+            addCommandButtons();
+            
+            // Add cursor
+            const cursorLine = document.createElement('div');
+            cursorLine.style.marginTop = '10px';
+            cursorLine.innerHTML = '> <span class="cursor"></span>';
+            terminalContent.appendChild(cursorLine);
+            
+            // Handle keyboard input
+            document.addEventListener('keydown', (e) => {
+                if (!isStarted) return;
+                
+                // Highlight virtual key if it exists
+                const virtualKey = Array.from(document.querySelectorAll('.keyboard-key'))
+                    .find(key => {
+                        const keyText = key.textContent.toLowerCase();
+                        if (keyText === 'space' && e.key === ' ') return true;
+                        if (keyText === 'backspace' && e.key === 'Backspace') return true;
+                        if (keyText === 'enter' && e.key === 'Enter') return true;
+                        return keyText === e.key.toLowerCase();
+                    });
+                
+                if (virtualKey) {
+                    virtualKey.classList.add('active');
+                    setTimeout(() => {
+                        virtualKey.classList.remove('active');
+                    }, 150);
+                }
+                
+                // Handle Enter key
+                if (e.key === 'Enter') {
+                    if (inputBuffer.trim() !== '') {
+                        // Remove cursor from current line
+                        const currentCursor = document.querySelector('.cursor');
+                        if (currentCursor) currentCursor.remove();
+                        
+                        // Handle the command
+                        handleCommand(inputBuffer.trim());
+                        
+                        // Reset input buffer
+                        inputBuffer = '';
+                        
+                        // Add new cursor line
+                        const newCursorLine = document.createElement('div');
+                        newCursorLine.style.marginTop = '10px';
+                        newCursorLine.innerHTML = '> <span class="cursor"></span>';
+                        terminalContent.appendChild(newCursorLine);
+                    }
+                } 
+                // Handle backspace
+                else if (e.key === 'Backspace') {
+                    inputBuffer = inputBuffer.slice(0, -1);
+                    updateCursorLine();
+                }
+                // Handle regular characters
+                else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+                    inputBuffer += e.key;
+                    updateCursorLine();
                 }
             });
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            // Start boot sequence immediately
+            bootSequence();
+            
+            // Create virtual keyboard
+            createVirtualKeyboard();
         });
     </script>
 </body>
