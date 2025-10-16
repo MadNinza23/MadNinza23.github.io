@@ -86,29 +86,12 @@
             51%, 100% { opacity: 0; }
         }
 
-        /* Command buttons */
-        .command-btn {
-            background: transparent;
-            border: 1px solid var(--text-color);
-            color: var(--text-color);
-            padding: 5px 10px;
-            margin: 5px;
-            cursor: pointer;
-            font-family: var(--font-family);
-            transition: all 0.2s;
-            border-radius: 3px;
-        }
-
-        .command-btn:hover {
-            background-color: rgba(51, 204, 51, 0.1);
-        }
-
         /* Project links */
         .project-link {
             display: inline-block;
             margin-top: 5px;
             padding: 3px 8px;
-            border: 1px solid var(--text-color);
+            
             color: var(--text-color);
             text-decoration: none;
             transition: all 0.2s;
@@ -123,7 +106,7 @@
         .project-item {
             margin-bottom: 15px;
             padding-left: 10px;
-            border-left: 1px solid var(--text-color);
+            
         }
 
         .project-title {
@@ -152,7 +135,8 @@
         }
 
         .keyboard-key {
-            background-color: rgba(30, 30, 30, 0.9)
+            background-color: rgba(30, 30, 30, 0.9);
+            
             color: var(--text-color);
             padding: 8px 5px;
             text-align: center;
@@ -334,6 +318,7 @@
         let isProjectsView = false;
         let currentLine = 0;
         let inputBuffer = '';
+        let bootComplete = false;
 
         // Type text with animation
         function typeText(text, element, delay = 30, callback = null) {
@@ -359,27 +344,6 @@
                     terminalContent.scrollTop = terminalContent.scrollHeight;
                 });
             }, delay);
-        }
-
-        // Add command buttons
-        function addCommandButtons() {
-            const commands = ['about', 'projects', 'contact', 'help'];
-            const buttonContainer = document.createElement('div');
-            buttonContainer.style.marginTop = '15px';
-            buttonContainer.style.marginBottom = '15px';
-            
-            commands.forEach(cmd => {
-                const button = document.createElement('button');
-                button.className = 'command-btn';
-                button.textContent = cmd;
-                button.addEventListener('click', () => {
-                    handleCommand(cmd);
-                });
-                buttonContainer.appendChild(button);
-            });
-            
-            terminalContent.appendChild(buttonContainer);
-            terminalContent.scrollTop = terminalContent.scrollHeight;
         }
 
         // Display projects in the requested format
@@ -419,10 +383,6 @@
 
         // Handle commands
         function handleCommand(cmd) {
-            // Clear existing buttons
-            const buttons = document.querySelectorAll('.command-btn');
-            buttons.forEach(btn => btn.remove());
-            
             // Add the command that was executed
             const commandLine = document.createElement('div');
             commandLine.className = 'command-line';
@@ -442,7 +402,6 @@
                         addLine('Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', 0, 20, 'output-line');
                         addLine('        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', 0, 20, 'output-line');
                         addLine('        Photography, Graphic Design, Social Media Management, Creative Direction', 0, 20, 'output-line');
-                        setTimeout(() => addCommandButtons(), 500);
                     }, 500);
                     break;
                     
@@ -451,7 +410,6 @@
                     addLine('Loading projects...', 0, 20, 'system-line');
                     setTimeout(() => {
                         displayProjects();
-                        setTimeout(() => addCommandButtons(), 500);
                     }, 500);
                     break;
                     
@@ -462,7 +420,6 @@
                         addLine('GitHub: [github.com/iswalif]', 0, 20, 'output-line');
                         addLine('Fiverr: [fiverr.com/wcreatezz]', 0, 20, 'output-line');
                         addLine('Email: [walif.services@gmail.com]', 0, 20, 'output-line');
-                        setTimeout(() => addCommandButtons(), 500);
                     }, 500);
                     break;
                     
@@ -473,7 +430,6 @@
                     addLine('projects - View project portfolio', 0, 20, 'output-line');
                     addLine('contact - Get contact information', 0, 20, 'output-line');
                     addLine('help - Display this help message', 0, 20, 'output-line');
-                    setTimeout(() => addCommandButtons(), 500);
                     break;
                     
                 default:
@@ -484,11 +440,9 @@
                         addLine(`Opening project: ${project.title}`, 0, 20, 'system-line');
                         setTimeout(() => {
                             window.open(project.link, '_blank');
-                            setTimeout(() => addCommandButtons(), 500);
                         }, 500);
                     } else {
                         addLine(`Command '${cmd}' not recognized. Type 'help' for available commands.`, 0, 20, 'error-line');
-                        setTimeout(() => addCommandButtons(), 500);
                     }
                     break;
             }
@@ -533,6 +487,19 @@
                         }, 150);
                     });
                     
+                    keyElement.addEventListener('touchstart', (e) => {
+                        e.preventDefault(); // Prevent default touch behavior
+                        handleVirtualKeyPress(key);
+                        keyElement.classList.add('active');
+                    });
+                    
+                    keyElement.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        setTimeout(() => {
+                            keyElement.classList.remove('active');
+                        }, 150);
+                    });
+                    
                     virtualKeyboard.appendChild(keyElement);
                 });
             });
@@ -543,6 +510,11 @@
 
         // Handle virtual keyboard key presses
         function handleVirtualKeyPress(key) {
+            if (!isStarted && key === 'enter' && bootComplete) {
+                startTerminal();
+                return;
+            }
+            
             if (!isStarted) return;
             
             switch(key) {
@@ -597,7 +569,7 @@
                 {text: "Starting network services...", type: "system"},
                 {text: "Launching security protocols...", type: "system"},
                 {text: "System initialized.", type: "success"},
-                {text: "Press [Start] to continue.", type: "system"}
+                {text: "Press Enter to continue.", type: "system"}
             ];
             
             bootLines.forEach((line, index) => {
@@ -608,37 +580,31 @@
                 addLine(line.text, index * 600, 30, className);
             });
             
-            // Add Start button after boot sequence
+            // Mark boot as complete after the last line
             setTimeout(() => {
-                const startButton = document.createElement('button');
-                startButton.className = 'command-btn';
-                startButton.textContent = 'Start';
-                startButton.style.marginTop = '15px';
-                startButton.addEventListener('click', startTerminal);
-                terminalContent.appendChild(startButton);
-                
-                // Also allow Enter key to start
-                document.addEventListener('keydown', function startOnEnter(e) {
-                    if (e.key === 'Enter' && isBooting) {
-                        startTerminal();
-                        document.removeEventListener('keydown', startOnEnter);
-                    }
-                });
+                bootComplete = true;
+                addLine('', 0, 0, 'command-line'); // Add empty line for cursor
+                const cursorLine = document.createElement('div');
+                cursorLine.style.marginTop = '10px';
+                cursorLine.innerHTML = '> <span class="cursor"></span>';
+                terminalContent.appendChild(cursorLine);
             }, bootLines.length * 600);
         }
 
         // Start terminal after boot
         function startTerminal() {
+            if (!bootComplete) return;
+            
             isBooting = false;
             isStarted = true;
+            bootComplete = false;
             
             // Clear terminal
             terminalContent.innerHTML = '';
             
-            // Show available commands
+            // Show welcome message
             addLine('Welcome to Walif\'s Portfolio Terminal', 0, 20, 'success-line');
-            addLine('Type a command or click a button below:', 0, 20, 'system-line');
-            addCommandButtons();
+            addLine('Type "help" for available commands', 0, 20, 'system-line');
             
             // Add cursor
             const cursorLine = document.createElement('div');
@@ -707,6 +673,13 @@
             
             // Create virtual keyboard
             createVirtualKeyboard();
+            
+            // Add global Enter key listener for boot completion
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && bootComplete && !isStarted) {
+                    startTerminal();
+                }
+            });
         });
     </script>
 </body>
