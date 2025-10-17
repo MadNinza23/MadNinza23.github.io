@@ -36,56 +36,6 @@
             overflow-x: hidden;
         }
 
-        /* Loading Screen */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--dark-bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        #loading-screen.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .loading-animation {
-            width: 80px;
-            height: 80px;
-            border: 5px solid rgba(74, 142, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--accent);
-            animation: spin 1s linear infinite;
-            margin-bottom: 2rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            text-align: center;
-        }
-
-        .project-name {
-            color: var(--accent);
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-
         /* Landing Page */
         #landing {
             height: 100vh;
@@ -434,15 +384,6 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="loading-animation"></div>
-        <div class="loading-text">
-            Loading Project
-            <div class="project-name" id="loading-project-name"></div>
-        </div>
-    </div>
-
     <!-- Landing Page -->
     <section id="landing">
         <div class="logo">Walif</div>
@@ -474,7 +415,7 @@
                     <div class="card-content">
                         <h3 class="card-title">Time Conversion Tool</h3>
                         <p class="card-desc">A utility for converting between different time zones and formats with a clean UI.</p>
-                        <a href="timeConverter.html" class="card-link" data-project-name="Time Conversion Tool">View Project <i class="fas fa-arrow-right"></i></a>
+                        <a href="timeConverter.html" class="card-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -486,7 +427,7 @@
                     <div class="card-content">
                         <h3 class="card-title">QR and Barcode Generator</h3>
                         <p class="card-desc">Transform text, links, or data into sleek scannable codes in one click.</p>
-                        <a href="qrgenerator.html" class="card-link" data-project-name="QR and Barcode Generator">View Project <i class="fas fa-arrow-right"></i></a>
+                        <a href="qrgenerator.html" class="card-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -498,7 +439,7 @@
                     <div class="card-content">
                         <h3 class="card-title">Expense Tracker</h3>
                         <p class="card-desc">A Simple Way to Track Your Expenses and Take Control of Your Money</p>
-                        <a href="expencetracker.html" class="card-link" data-project-name="Expense Tracker">View Project <i class="fas fa-arrow-right"></i></a>
+                        <a href="expencetracker.html" class="card-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -510,7 +451,7 @@
                     <div class="card-content">
                         <h3 class="card-title">BMI Calculator</h3>
                         <p class="card-desc">Calculate BMI , Track Wellness.</p>
-                        <a href="bmicalc.html" class="card-link" data-project-name="Typing Speed Test">View Project <i class="fas fa-arrow-right"></i></a>
+                        <a href="bmicalc.html" class="card-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -523,7 +464,7 @@
                     <div class="card-content">
                         <h3 class="card-title">Particle Physics Sim</h3>
                         <p class="card-desc">Simulate Physics in particles inside your viewport.</p>
-                        <a href="particlesim.html" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                        <a href="particlesim.html" class="card-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             
@@ -535,7 +476,7 @@
                     <div class="card-content">
                         <h3 class="card-title">Terminal Portfolio</h3>
                         <p class="card-desc">A portfolio inspired by a console</p>
-                        <a href="terminal.html" class="card-link">View Project <i class="fas fa-arrow-right"></i></a>
+                        <a href="terminal.html" class="card-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
 
@@ -600,9 +541,9 @@
             <div class="contact-content fade-in">
                 <p class="contact-text">Feel free to reach out for collaborations or just to say hello!</p>
                 <div class="social-links">
-                    <a href="https://github.com/iswalif" class="social-link"><i class="fab fa-github"></i></a>
-                    <a href="https://fiverr.com/wcreatezz" class="social-link"><i class="fas fa-briefcase"></i></a>
-                    <a href="mailto:walif.services@gmail.com"  class="social-link"><i class="fas fa-envelope"></i></a>
+                    <a href="https://github.com/iswalif" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://fiverr.com/wcreatezz" class="social-link" target="_blank"><i class="fas fa-briefcase"></i></a>
+                    <a href="mailto:walif.services@gmail.com" class="social-link" target="_blank"><i class="fas fa-envelope"></i></a>
                     
                 </div>
             </div>
@@ -650,29 +591,6 @@
                 if (elementTop < window.innerHeight - elementVisible) {
                     element.classList.add('visible');
                 }
-            });
-        });
-
-        // Project loading functionality
-        document.querySelectorAll('.card-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Get project name from data attribute
-                const projectName = this.getAttribute('data-project-name');
-                
-                
-                // Show loading screen
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.add('active');
-                
-                // Get the target URL
-                const targetUrl = this.getAttribute('href');
-                
-                // Wait for 5 seconds then redirect
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 5000);
             });
         });
     </script>
