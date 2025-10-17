@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="logo.png">
     <title>Walif's Portfolio</title>
     <style>
         :root {
@@ -121,7 +121,7 @@
             font-weight: bold;
         }
 
-        /* Virtual keyboard - RESPONSIVE DESIGN */
+        /* Virtual keyboard */
         #virtual-keyboard {
             width: 100%;
             max-width: 800px;
@@ -129,33 +129,23 @@
             border-radius: 5px;
             margin-top: 20px;
             padding: 10px;
-            
-            /* Responsive grid layout */
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             gap: 5px;
-            
-            /* Prevent horizontal scrolling */
-            overflow: hidden;
         }
 
         .keyboard-key {
             background-color: rgba(30, 30, 30, 0.9);
             color: var(--text-color);
+            padding: 8px 5px;
             text-align: center;
             cursor: pointer;
             border-radius: 3px;
             font-family: var(--font-family);
+            font-size: 0.8rem;
             transition: all 0.1s;
             user-select: none;
-            
-            /* Proportional sizing */
-            padding: 8px 2px;
-            font-size: clamp(0.6rem, 1.5vw, 0.8rem);
-            min-height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-width: 40px;
         }
 
         .keyboard-key:hover {
@@ -167,7 +157,6 @@
             transform: scale(0.95);
         }
 
-        /* Special key spans - maintaining QWERTY layout */
         .keyboard-key.space {
             grid-column: span 4;
         }
@@ -180,10 +169,33 @@
             grid-column: span 2;
         }
 
+        /* Custom scrollbar for virtual keyboard */
+        #virtual-keyboard::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        #virtual-keyboard::-webkit-scrollbar-track {
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 4px;
+        }
+
+        #virtual-keyboard::-webkit-scrollbar-thumb {
+            background: rgba(51, 204, 51, 0.4);
+            border-radius: 4px;
+        }
+
+        #virtual-keyboard::-webkit-scrollbar-thumb:hover {
+            background: rgba(51, 204, 51, 0.6);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 1024px) {
             .terminal {
                 height: 50vh;
+            }
+            
+            #virtual-keyboard {
+                grid-template-columns: repeat(10, 1fr);
             }
         }
 
@@ -192,9 +204,18 @@
                 height: 45vh;
             }
 
+            #virtual-keyboard {
+                grid-template-columns: repeat(10, 1fr);
+                gap: 4px;
+                padding: 8px;
+                overflow-x: auto;
+                min-width: 600px;
+            }
+
             .keyboard-key {
-                padding: 6px 1px;
-                min-height: 30px;
+                padding: 6px 3px;
+                font-size: 0.7rem;
+                min-width: 35px;
             }
         }
 
@@ -208,23 +229,32 @@
                 padding: 15px;
             }
 
-            .keyboard-key {
-                padding: 5px 1px;
-                min-height: 28px;
-                font-size: clamp(0.5rem, 3vw, 0.7rem);
-            }
-        }
-
-        /* Extreme small screen fallback - only if absolutely necessary */
-        @media (max-width: 350px) {
             #virtual-keyboard {
-                gap: 3px;
-                padding: 5px;
+                display: grid;
+                grid-template-columns: repeat(10, 1fr);
+                overflow-x: auto;
+                gap: 4px;
+                padding: 8px;
+                min-width: 500px;
+                width: 100%;
+            }
+
+            .keyboard-key {
+                padding: 8px 4px;
+                font-size: 0.7rem;
+                min-width: 35px;
             }
             
-            .keyboard-key {
-                min-height: 25px;
-                font-size: 0.5rem;
+            .keyboard-key.space {
+                grid-column: span 4;
+            }
+
+            .keyboard-key.enter {
+                grid-column: span 2;
+            }
+
+            .keyboard-key.backspace {
+                grid-column: span 2;
             }
         }
 
@@ -265,7 +295,7 @@
                 </div>
             </div>
 
-            <!-- Virtual keyboard - RESPONSIVE ON ALL DEVICES -->
+            <!-- Virtual keyboard - VISIBLE ON ALL DEVICES -->
             <div id="virtual-keyboard">
                 <!-- Keyboard keys will be populated by JavaScript -->
             </div>
@@ -334,15 +364,25 @@
 
         // Add line to terminal
         function addLine(text, delay = 0, typingDelay = 30, className = "") {
-            setTimeout(() => {
-                const line = document.createElement('div');
-                if (className) line.className = className;
-                terminalContent.appendChild(line);
-                typeText(text, line, typingDelay, () => {
-                    // Scroll to bottom
-                    terminalContent.scrollTop = terminalContent.scrollHeight;
-                });
-            }, delay);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    if (className) line.className = className;
+                    terminalContent.appendChild(line);
+                    
+                    if (typingDelay > 0) {
+                        typeText(text, line, typingDelay, () => {
+                            // Scroll to bottom
+                            terminalContent.scrollTop = terminalContent.scrollHeight;
+                            resolve();
+                        });
+                    } else {
+                        line.textContent = text;
+                        terminalContent.scrollTop = terminalContent.scrollHeight;
+                        resolve();
+                    }
+                }, delay);
+            });
         }
 
         // Display projects in the requested format
@@ -380,8 +420,18 @@
             terminalContent.scrollTop = terminalContent.scrollHeight;
         }
 
+        // Add cursor line
+        function addCursorLine() {
+            const cursorLine = document.createElement('div');
+            cursorLine.style.marginTop = '10px';
+            cursorLine.innerHTML = '> ' + inputBuffer + '<span class="cursor"></span>';
+            terminalContent.appendChild(cursorLine);
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+            return cursorLine;
+        }
+
         // Handle commands
-        function handleCommand(cmd) {
+        async function handleCommand(cmd) {
             // Add the command that was executed
             const commandLine = document.createElement('div');
             commandLine.className = 'command-line';
@@ -391,22 +441,20 @@
             switch(cmd) {
                 case 'about':
                     isProjectsView = false;
-                    addLine('Accessing profile...', 0, 20, 'system-line');
-                    setTimeout(() => {
-                        addLine('Name: Walif Mohian', 0, 20, 'output-line');
-                        addLine('Age: 18', 0, 20, 'output-line');
-                        addLine('Location: Sylhet, Bangladesh', 0, 20, 'output-line');
-                        addLine('Role: Content Creator & Editor', 0, 20, 'output-line');
-                        addLine('Description: Passionate about video editing and creating engaging digital experiences.', 0, 20, 'output-line');
-                        addLine('Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', 0, 20, 'output-line');
-                        addLine('        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', 0, 20, 'output-line');
-                        addLine('        Photography, Graphic Design, Social Media Management, Creative Direction', 0, 20, 'output-line');
-                    }, 500);
+                    await addLine('Accessing profile...', 0, 20, 'system-line');
+                    await addLine('Name: Walif Mohian', 0, 20, 'output-line');
+                    await addLine('Age: 18', 0, 20, 'output-line');
+                    await addLine('Location: Sylhet, Bangladesh', 0, 20, 'output-line');
+                    await addLine('Role: Content Creator & Editor', 0, 20, 'output-line');
+                    await addLine('Description: Passionate about video editing and creating engaging digital experiences.', 0, 20, 'output-line');
+                    await addLine('Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', 0, 20, 'output-line');
+                    await addLine('        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', 0, 20, 'output-line');
+                    await addLine('        Photography, Graphic Design, Social Media Management, Creative Direction', 0, 20, 'output-line');
                     break;
                     
                 case 'projects':
                     isProjectsView = true;
-                    addLine('Loading projects...', 0, 20, 'system-line');
+                    await addLine('Loading projects...', 0, 20, 'system-line');
                     setTimeout(() => {
                         displayProjects();
                     }, 500);
@@ -414,21 +462,19 @@
                     
                 case 'contact':
                     isProjectsView = false;
-                    addLine('Accessing contact directory...', 0, 20, 'system-line');
-                    setTimeout(() => {
-                        addLine('GitHub: [github.com/iswalif]', 0, 20, 'output-line');
-                        addLine('Fiverr: [fiverr.com/wcreatezz]', 0, 20, 'output-line');
-                        addLine('Email: [walif.services@gmail.com]', 0, 20, 'output-line');
-                    }, 500);
+                    await addLine('Accessing contact directory...', 0, 20, 'system-line');
+                    await addLine('GitHub: [github.com/iswalif]', 0, 20, 'output-line');
+                    await addLine('Fiverr: [fiverr.com/wcreatezz]', 0, 20, 'output-line');
+                    await addLine('Email: [walif.services@gmail.com]', 0, 20, 'output-line');
                     break;
                     
                 case 'help':
                     isProjectsView = false;
-                    addLine('Available commands:', 0, 20, 'success-line');
-                    addLine('about - View profile information', 0, 20, 'output-line');
-                    addLine('projects - View project portfolio', 0, 20, 'output-line');
-                    addLine('contact - Get contact information', 0, 20, 'output-line');
-                    addLine('help - Display this help message', 0, 20, 'output-line');
+                    await addLine('Available commands:', 0, 20, 'success-line');
+                    await addLine('about - View profile information', 0, 20, 'output-line');
+                    await addLine('projects - View project portfolio', 0, 20, 'output-line');
+                    await addLine('contact - Get contact information', 0, 20, 'output-line');
+                    await addLine('help - Display this help message', 0, 20, 'output-line');
                     break;
                     
                 default:
@@ -436,24 +482,27 @@
                     if (isProjectsView && !isNaN(cmd) && cmd >= 1 && cmd <= projects.length) {
                         const projectIndex = parseInt(cmd) - 1;
                         const project = projects[projectIndex];
-                        addLine(`Opening project: ${project.title}`, 0, 20, 'system-line');
+                        await addLine(`Opening project: ${project.title}`, 0, 20, 'system-line');
                         setTimeout(() => {
                             window.open(project.link, '_blank');
                         }, 500);
                     } else {
-                        addLine(`Command '${cmd}' not recognized. Type 'help' for available commands.`, 0, 20, 'error-line');
+                        await addLine(`Command '${cmd}' not recognized. Type 'help' for available commands.`, 0, 20, 'error-line');
                     }
                     break;
             }
+            
+            // Add cursor line after command output
+            addCursorLine();
         }
 
-        // Create virtual keyboard - UPDATED FOR RESPONSIVE LAYOUT
+        // Create virtual keyboard
         function createVirtualKeyboard() {
             const keyboardLayout = [
                 ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
                 ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
                 ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-                ['/','z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'],
+                ['/','z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', ],
                 ['space', 'backspace', 'enter']
             ];
             
@@ -466,7 +515,6 @@
                     keyElement.className = 'keyboard-key';
                     keyElement.textContent = key;
                     
-                    // Apply special spans for larger keys
                     if (key === 'space') {
                         keyElement.classList.add('space');
                         keyElement.textContent = 'Space';
@@ -503,6 +551,9 @@
                     virtualKeyboard.appendChild(keyElement);
                 });
             });
+            
+            // Make sure keyboard is visible
+            virtualKeyboard.style.display = 'grid';
         }
 
         // Handle virtual keyboard key presses
@@ -529,12 +580,6 @@
                         
                         // Reset input buffer
                         inputBuffer = '';
-                        
-                        // Add new cursor line
-                        const newCursorLine = document.createElement('div');
-                        newCursorLine.style.marginTop = '10px';
-                        newCursorLine.innerHTML = '> <span class="cursor"></span>';
-                        terminalContent.appendChild(newCursorLine);
                     }
                     break;
                 case 'space':
@@ -558,7 +603,7 @@
         }
 
         // Boot sequence
-        function bootSequence() {
+        async function bootSequence() {
             const bootLines = [
                 {text: "Initializing system...", type: "system"},
                 {text: "Loading kernel modules...", type: "system"},
@@ -569,23 +614,19 @@
                 {text: "Press Enter to continue.", type: "system"}
             ];
             
-            bootLines.forEach((line, index) => {
+            for (let i = 0; i < bootLines.length; i++) {
+                const line = bootLines[i];
                 let className = "boot-line";
                 if (line.type === "system") className += " system-line";
                 if (line.type === "success") className += " success-line";
                 
-                addLine(line.text, index * 600, 30, className);
-            });
+                await addLine(line.text, 0, 30, className);
+            }
             
             // Mark boot as complete after the last line
-            setTimeout(() => {
-                bootComplete = true;
-                addLine('', 0, 0, 'command-line'); // Add empty line for cursor
-                const cursorLine = document.createElement('div');
-                cursorLine.style.marginTop = '10px';
-                cursorLine.innerHTML = '> <span class="cursor"></span>';
-                terminalContent.appendChild(cursorLine);
-            }, bootLines.length * 600);
+            bootComplete = true;
+            addLine('', 0, 0, 'command-line'); // Add empty line for cursor
+            addCursorLine();
         }
 
         // Start terminal after boot
@@ -604,10 +645,7 @@
             addLine('Type "help" for available commands', 0, 20, 'system-line');
             
             // Add cursor
-            const cursorLine = document.createElement('div');
-            cursorLine.style.marginTop = '10px';
-            cursorLine.innerHTML = '> <span class="cursor"></span>';
-            terminalContent.appendChild(cursorLine);
+            addCursorLine();
             
             // Handle keyboard input
             document.addEventListener('keydown', (e) => {
@@ -642,12 +680,6 @@
                         
                         // Reset input buffer
                         inputBuffer = '';
-                        
-                        // Add new cursor line
-                        const newCursorLine = document.createElement('div');
-                        newCursorLine.style.marginTop = '10px';
-                        newCursorLine.innerHTML = '> <span class="cursor"></span>';
-                        terminalContent.appendChild(newCursorLine);
                     }
                 } 
                 // Handle backspace
