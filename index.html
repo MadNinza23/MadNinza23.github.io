@@ -126,7 +126,6 @@
             width: 100%;
             max-width: 800px;
             background-color: rgba(0, 0, 0, 0.9);
-            
             border-radius: 5px;
             margin-top: 20px;
             padding: 10px;
@@ -137,7 +136,6 @@
 
         .keyboard-key {
             background-color: rgba(30, 30, 30, 0.9);
-            
             color: var(--text-color);
             padding: 8px 5px;
             text-align: center;
@@ -147,6 +145,7 @@
             font-size: 0.8rem;
             transition: all 0.1s;
             user-select: none;
+            min-width: 40px;
         }
 
         .keyboard-key:hover {
@@ -170,6 +169,25 @@
             grid-column: span 2;
         }
 
+        /* Custom scrollbar for virtual keyboard */
+        #virtual-keyboard::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        #virtual-keyboard::-webkit-scrollbar-track {
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 4px;
+        }
+
+        #virtual-keyboard::-webkit-scrollbar-thumb {
+            background: rgba(51, 204, 51, 0.4);
+            border-radius: 4px;
+        }
+
+        #virtual-keyboard::-webkit-scrollbar-thumb:hover {
+            background: rgba(51, 204, 51, 0.6);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 1024px) {
             .terminal {
@@ -177,7 +195,7 @@
             }
             
             #virtual-keyboard {
-                grid-template-columns: repeat(8, 1fr);
+                grid-template-columns: repeat(10, 1fr);
             }
         }
 
@@ -187,26 +205,17 @@
             }
 
             #virtual-keyboard {
-                grid-template-columns: repeat(6, 1fr);
-                gap: 3px;
-                padding: 5px;
+                grid-template-columns: repeat(10, 1fr);
+                gap: 4px;
+                padding: 8px;
+                overflow-x: auto;
+                min-width: 600px;
             }
 
             .keyboard-key {
                 padding: 6px 3px;
                 font-size: 0.7rem;
-            }
-
-            .keyboard-key.space {
-                grid-column: span 3;
-            }
-
-            .keyboard-key.enter {
-                grid-column: span 2;
-            }
-
-            .keyboard-key.backspace {
-                grid-column: span 2;
+                min-width: 35px;
             }
         }
 
@@ -221,12 +230,31 @@
             }
 
             #virtual-keyboard {
-                grid-template-columns: repeat(5, 1fr);
+                display: grid;
+                grid-template-columns: repeat(10, 1fr);
+                overflow-x: auto;
+                gap: 4px;
+                padding: 8px;
+                min-width: 500px;
+                width: 100%;
             }
 
             .keyboard-key {
-                padding: 5px 2px;
-                font-size: 0.6rem;
+                padding: 8px 4px;
+                font-size: 0.7rem;
+                min-width: 35px;
+            }
+            
+            .keyboard-key.space {
+                grid-column: span 4;
+            }
+
+            .keyboard-key.enter {
+                grid-column: span 2;
+            }
+
+            .keyboard-key.backspace {
+                grid-column: span 2;
             }
         }
 
@@ -455,7 +483,7 @@
                 ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
                 ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
                 ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-                ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+                ['/','z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', ],
                 ['space', 'backspace', 'enter']
             ];
             
