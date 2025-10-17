@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="logo.png">
     <title>Walif's Portfolio</title>
     <style>
         :root {
@@ -121,7 +121,7 @@
             font-weight: bold;
         }
 
-        /* Virtual keyboard */
+        /* Virtual keyboard - RESPONSIVE DESIGN */
         #virtual-keyboard {
             width: 100%;
             max-width: 800px;
@@ -129,23 +129,33 @@
             border-radius: 5px;
             margin-top: 20px;
             padding: 10px;
+            
+            /* Responsive grid layout */
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             gap: 5px;
+            
+            /* Prevent horizontal scrolling */
+            overflow: hidden;
         }
 
         .keyboard-key {
             background-color: rgba(30, 30, 30, 0.9);
             color: var(--text-color);
-            padding: 8px 5px;
             text-align: center;
             cursor: pointer;
             border-radius: 3px;
             font-family: var(--font-family);
-            font-size: 0.8rem;
             transition: all 0.1s;
             user-select: none;
-            min-width: 40px;
+            
+            /* Proportional sizing */
+            padding: 8px 2px;
+            font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .keyboard-key:hover {
@@ -157,6 +167,7 @@
             transform: scale(0.95);
         }
 
+        /* Special key spans - maintaining QWERTY layout */
         .keyboard-key.space {
             grid-column: span 4;
         }
@@ -169,33 +180,10 @@
             grid-column: span 2;
         }
 
-        /* Custom scrollbar for virtual keyboard */
-        #virtual-keyboard::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        #virtual-keyboard::-webkit-scrollbar-track {
-            background: rgba(20, 20, 20, 0.9);
-            border-radius: 4px;
-        }
-
-        #virtual-keyboard::-webkit-scrollbar-thumb {
-            background: rgba(51, 204, 51, 0.4);
-            border-radius: 4px;
-        }
-
-        #virtual-keyboard::-webkit-scrollbar-thumb:hover {
-            background: rgba(51, 204, 51, 0.6);
-        }
-
         /* Responsive adjustments */
         @media (max-width: 1024px) {
             .terminal {
                 height: 50vh;
-            }
-            
-            #virtual-keyboard {
-                grid-template-columns: repeat(10, 1fr);
             }
         }
 
@@ -204,18 +192,9 @@
                 height: 45vh;
             }
 
-            #virtual-keyboard {
-                grid-template-columns: repeat(10, 1fr);
-                gap: 4px;
-                padding: 8px;
-                overflow-x: auto;
-                min-width: 600px;
-            }
-
             .keyboard-key {
-                padding: 6px 3px;
-                font-size: 0.7rem;
-                min-width: 35px;
+                padding: 6px 1px;
+                min-height: 30px;
             }
         }
 
@@ -229,32 +208,23 @@
                 padding: 15px;
             }
 
-            #virtual-keyboard {
-                display: grid;
-                grid-template-columns: repeat(10, 1fr);
-                overflow-x: auto;
-                gap: 4px;
-                padding: 8px;
-                min-width: 500px;
-                width: 100%;
-            }
-
             .keyboard-key {
-                padding: 8px 4px;
-                font-size: 0.7rem;
-                min-width: 35px;
+                padding: 5px 1px;
+                min-height: 28px;
+                font-size: clamp(0.5rem, 3vw, 0.7rem);
+            }
+        }
+
+        /* Extreme small screen fallback - only if absolutely necessary */
+        @media (max-width: 350px) {
+            #virtual-keyboard {
+                gap: 3px;
+                padding: 5px;
             }
             
-            .keyboard-key.space {
-                grid-column: span 4;
-            }
-
-            .keyboard-key.enter {
-                grid-column: span 2;
-            }
-
-            .keyboard-key.backspace {
-                grid-column: span 2;
+            .keyboard-key {
+                min-height: 25px;
+                font-size: 0.5rem;
             }
         }
 
@@ -295,7 +265,7 @@
                 </div>
             </div>
 
-            <!-- Virtual keyboard - VISIBLE ON ALL DEVICES -->
+            <!-- Virtual keyboard - RESPONSIVE ON ALL DEVICES -->
             <div id="virtual-keyboard">
                 <!-- Keyboard keys will be populated by JavaScript -->
             </div>
@@ -477,13 +447,13 @@
             }
         }
 
-        // Create virtual keyboard
+        // Create virtual keyboard - UPDATED FOR RESPONSIVE LAYOUT
         function createVirtualKeyboard() {
             const keyboardLayout = [
                 ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
                 ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
                 ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-                ['/','z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', ],
+                ['/','z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'],
                 ['space', 'backspace', 'enter']
             ];
             
@@ -496,6 +466,7 @@
                     keyElement.className = 'keyboard-key';
                     keyElement.textContent = key;
                     
+                    // Apply special spans for larger keys
                     if (key === 'space') {
                         keyElement.classList.add('space');
                         keyElement.textContent = 'Space';
@@ -532,9 +503,6 @@
                     virtualKeyboard.appendChild(keyElement);
                 });
             });
-            
-            // Make sure keyboard is visible
-            virtualKeyboard.style.display = 'grid';
         }
 
         // Handle virtual keyboard key presses
