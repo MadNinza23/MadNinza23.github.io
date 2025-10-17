@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="logo.png">
     <title>Walif's Portfolio</title>
     <style>
         :root {
@@ -364,25 +363,15 @@
 
         // Add line to terminal
         function addLine(text, delay = 0, typingDelay = 30, className = "") {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    const line = document.createElement('div');
-                    if (className) line.className = className;
-                    terminalContent.appendChild(line);
-                    
-                    if (typingDelay > 0) {
-                        typeText(text, line, typingDelay, () => {
-                            // Scroll to bottom
-                            terminalContent.scrollTop = terminalContent.scrollHeight;
-                            resolve();
-                        });
-                    } else {
-                        line.textContent = text;
-                        terminalContent.scrollTop = terminalContent.scrollHeight;
-                        resolve();
-                    }
-                }, delay);
-            });
+            setTimeout(() => {
+                const line = document.createElement('div');
+                if (className) line.className = className;
+                terminalContent.appendChild(line);
+                typeText(text, line, typingDelay, () => {
+                    // Scroll to bottom
+                    terminalContent.scrollTop = terminalContent.scrollHeight;
+                });
+            }, delay);
         }
 
         // Display projects in the requested format
@@ -431,50 +420,60 @@
         }
 
         // Handle commands
-        async function handleCommand(cmd) {
+        function handleCommand(cmd) {
             // Add the command that was executed
             const commandLine = document.createElement('div');
             commandLine.className = 'command-line';
             commandLine.textContent = '> ' + cmd;
             terminalContent.appendChild(commandLine);
             
+            let outputLines = [];
+            
             switch(cmd) {
                 case 'about':
                     isProjectsView = false;
-                    await addLine('Accessing profile...', 0, 20, 'system-line');
-                    await addLine('Name: Walif Mohian', 0, 20, 'output-line');
-                    await addLine('Age: 18', 0, 20, 'output-line');
-                    await addLine('Location: Sylhet, Bangladesh', 0, 20, 'output-line');
-                    await addLine('Role: Content Creator & Editor', 0, 20, 'output-line');
-                    await addLine('Description: Passionate about video editing and creating engaging digital experiences.', 0, 20, 'output-line');
-                    await addLine('Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', 0, 20, 'output-line');
-                    await addLine('        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', 0, 20, 'output-line');
-                    await addLine('        Photography, Graphic Design, Social Media Management, Creative Direction', 0, 20, 'output-line');
+                    outputLines = [
+                        {text: 'Accessing profile...', type: 'system'},
+                        {text: 'Name: Walif Mohian', type: 'output'},
+                        {text: 'Age: 18', type: 'output'},
+                        {text: 'Location: Sylhet, Bangladesh', type: 'output'},
+                        {text: 'Role: Content Creator & Editor', type: 'output'},
+                        {text: 'Description: Passionate about video editing and creating engaging digital experiences.', type: 'output'},
+                        {text: 'Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', type: 'output'},
+                        {text: '        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', type: 'output'},
+                        {text: '        Photography, Graphic Design, Social Media Management, Creative Direction', type: 'output'}
+                    ];
                     break;
                     
                 case 'projects':
                     isProjectsView = true;
-                    await addLine('Loading projects...', 0, 20, 'system-line');
+                    addLine('Loading projects...', 0, 20, 'system-line');
                     setTimeout(() => {
                         displayProjects();
+                        // Add cursor after projects are displayed
+                        addCursorLine();
                     }, 500);
-                    break;
+                    return;
                     
                 case 'contact':
                     isProjectsView = false;
-                    await addLine('Accessing contact directory...', 0, 20, 'system-line');
-                    await addLine('GitHub: [github.com/iswalif]', 0, 20, 'output-line');
-                    await addLine('Fiverr: [fiverr.com/wcreatezz]', 0, 20, 'output-line');
-                    await addLine('Email: [walif.services@gmail.com]', 0, 20, 'output-line');
+                    outputLines = [
+                        {text: 'Accessing contact directory...', type: 'system'},
+                        {text: 'GitHub: [github.com/iswalif]', type: 'output'},
+                        {text: 'Fiverr: [fiverr.com/wcreatezz]', type: 'output'},
+                        {text: 'Email: [walif.services@gmail.com]', type: 'output'}
+                    ];
                     break;
                     
                 case 'help':
                     isProjectsView = false;
-                    await addLine('Available commands:', 0, 20, 'success-line');
-                    await addLine('about - View profile information', 0, 20, 'output-line');
-                    await addLine('projects - View project portfolio', 0, 20, 'output-line');
-                    await addLine('contact - Get contact information', 0, 20, 'output-line');
-                    await addLine('help - Display this help message', 0, 20, 'output-line');
+                    outputLines = [
+                        {text: 'Available commands:', type: 'success'},
+                        {text: 'about - View profile information', type: 'output'},
+                        {text: 'projects - View project portfolio', type: 'output'},
+                        {text: 'contact - Get contact information', type: 'output'},
+                        {text: 'help - Display this help message', type: 'output'}
+                    ];
                     break;
                     
                 default:
@@ -482,18 +481,37 @@
                     if (isProjectsView && !isNaN(cmd) && cmd >= 1 && cmd <= projects.length) {
                         const projectIndex = parseInt(cmd) - 1;
                         const project = projects[projectIndex];
-                        await addLine(`Opening project: ${project.title}`, 0, 20, 'system-line');
+                        outputLines = [
+                            {text: `Opening project: ${project.title}`, type: 'system'}
+                        ];
                         setTimeout(() => {
                             window.open(project.link, '_blank');
                         }, 500);
                     } else {
-                        await addLine(`Command '${cmd}' not recognized. Type 'help' for available commands.`, 0, 20, 'error-line');
+                        outputLines = [
+                            {text: `Command '${cmd}' not recognized. Type 'help' for available commands.`, type: 'error'}
+                        ];
                     }
                     break;
             }
             
-            // Add cursor line after command output
-            addCursorLine();
+            // Display output lines with proper timing
+            let delay = 0;
+            outputLines.forEach((line, index) => {
+                let className = "";
+                if (line.type === 'system') className = 'system-line';
+                else if (line.type === 'success') className = 'success-line';
+                else if (line.type === 'error') className = 'error-line';
+                else className = 'output-line';
+                
+                addLine(line.text, delay, 20, className);
+                delay += 300;
+            });
+            
+            // Add cursor after all output is displayed
+            setTimeout(() => {
+                addCursorLine();
+            }, delay);
         }
 
         // Create virtual keyboard
@@ -603,7 +621,7 @@
         }
 
         // Boot sequence
-        async function bootSequence() {
+        function bootSequence() {
             const bootLines = [
                 {text: "Initializing system...", type: "system"},
                 {text: "Loading kernel modules...", type: "system"},
@@ -614,19 +632,20 @@
                 {text: "Press Enter to continue.", type: "system"}
             ];
             
-            for (let i = 0; i < bootLines.length; i++) {
-                const line = bootLines[i];
+            bootLines.forEach((line, index) => {
                 let className = "boot-line";
                 if (line.type === "system") className += " system-line";
                 if (line.type === "success") className += " success-line";
                 
-                await addLine(line.text, 0, 30, className);
-            }
+                addLine(line.text, index * 600, 30, className);
+            });
             
             // Mark boot as complete after the last line
-            bootComplete = true;
-            addLine('', 0, 0, 'command-line'); // Add empty line for cursor
-            addCursorLine();
+            setTimeout(() => {
+                bootComplete = true;
+                addLine('', 0, 0, 'command-line'); // Add empty line for cursor
+                addCursorLine();
+            }, bootLines.length * 600);
         }
 
         // Start terminal after boot
