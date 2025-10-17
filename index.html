@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>Walif's Portfolio</title>
     <style>
         :root {
@@ -409,16 +410,6 @@
             terminalContent.scrollTop = terminalContent.scrollHeight;
         }
 
-        // Add cursor line
-        function addCursorLine() {
-            const cursorLine = document.createElement('div');
-            cursorLine.style.marginTop = '10px';
-            cursorLine.innerHTML = '> ' + inputBuffer + '<span class="cursor"></span>';
-            terminalContent.appendChild(cursorLine);
-            terminalContent.scrollTop = terminalContent.scrollHeight;
-            return cursorLine;
-        }
-
         // Handle commands
         function handleCommand(cmd) {
             // Add the command that was executed
@@ -427,22 +418,20 @@
             commandLine.textContent = '> ' + cmd;
             terminalContent.appendChild(commandLine);
             
-            let outputLines = [];
-            
             switch(cmd) {
                 case 'about':
                     isProjectsView = false;
-                    outputLines = [
-                        {text: 'Accessing profile...', type: 'system'},
-                        {text: 'Name: Walif Mohian', type: 'output'},
-                        {text: 'Age: 18', type: 'output'},
-                        {text: 'Location: Sylhet, Bangladesh', type: 'output'},
-                        {text: 'Role: Content Creator & Editor', type: 'output'},
-                        {text: 'Description: Passionate about video editing and creating engaging digital experiences.', type: 'output'},
-                        {text: 'Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', type: 'output'},
-                        {text: '        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', type: 'output'},
-                        {text: '        Photography, Graphic Design, Social Media Management, Creative Direction', type: 'output'}
-                    ];
+                    addLine('Accessing profile...', 0, 20, 'system-line');
+                    setTimeout(() => {
+                        addLine('Name: Walif Mohian', 0, 20, 'output-line');
+                        addLine('Age: 18', 0, 20, 'output-line');
+                        addLine('Location: Sylhet, Bangladesh', 0, 20, 'output-line');
+                        addLine('Role: Content Creator & Editor', 0, 20, 'output-line');
+                        addLine('Description: Passionate about video editing and creating engaging digital experiences.', 0, 20, 'output-line');
+                        addLine('Skills: Video Production, Photo Editing, Storyboarding, Content Strategy,', 0, 20, 'output-line');
+                        addLine('        Adobe Premiere Pro, Final Cut Pro, Color Grading, Motion Graphics,', 0, 20, 'output-line');
+                        addLine('        Photography, Graphic Design, Social Media Management, Creative Direction', 0, 20, 'output-line');
+                    }, 500);
                     break;
                     
                 case 'projects':
@@ -450,30 +439,26 @@
                     addLine('Loading projects...', 0, 20, 'system-line');
                     setTimeout(() => {
                         displayProjects();
-                        // Add cursor after projects are displayed
-                        addCursorLine();
                     }, 500);
-                    return;
+                    break;
                     
                 case 'contact':
                     isProjectsView = false;
-                    outputLines = [
-                        {text: 'Accessing contact directory...', type: 'system'},
-                        {text: 'GitHub: [github.com/iswalif]', type: 'output'},
-                        {text: 'Fiverr: [fiverr.com/wcreatezz]', type: 'output'},
-                        {text: 'Email: [walif.services@gmail.com]', type: 'output'}
-                    ];
+                    addLine('Accessing contact directory...', 0, 20, 'system-line');
+                    setTimeout(() => {
+                        addLine('GitHub: [github.com/iswalif]', 0, 20, 'output-line');
+                        addLine('Fiverr: [fiverr.com/wcreatezz]', 0, 20, 'output-line');
+                        addLine('Email: [walif.services@gmail.com]', 0, 20, 'output-line');
+                    }, 500);
                     break;
                     
                 case 'help':
                     isProjectsView = false;
-                    outputLines = [
-                        {text: 'Available commands:', type: 'success'},
-                        {text: 'about - View profile information', type: 'output'},
-                        {text: 'projects - View project portfolio', type: 'output'},
-                        {text: 'contact - Get contact information', type: 'output'},
-                        {text: 'help - Display this help message', type: 'output'}
-                    ];
+                    addLine('Available commands:', 0, 20, 'success-line');
+                    addLine('about - View profile information', 0, 20, 'output-line');
+                    addLine('projects - View project portfolio', 0, 20, 'output-line');
+                    addLine('contact - Get contact information', 0, 20, 'output-line');
+                    addLine('help - Display this help message', 0, 20, 'output-line');
                     break;
                     
                 default:
@@ -481,37 +466,15 @@
                     if (isProjectsView && !isNaN(cmd) && cmd >= 1 && cmd <= projects.length) {
                         const projectIndex = parseInt(cmd) - 1;
                         const project = projects[projectIndex];
-                        outputLines = [
-                            {text: `Opening project: ${project.title}`, type: 'system'}
-                        ];
+                        addLine(`Opening project: ${project.title}`, 0, 20, 'system-line');
                         setTimeout(() => {
                             window.open(project.link, '_blank');
                         }, 500);
                     } else {
-                        outputLines = [
-                            {text: `Command '${cmd}' not recognized. Type 'help' for available commands.`, type: 'error'}
-                        ];
+                        addLine(`Command '${cmd}' not recognized. Type 'help' for available commands.`, 0, 20, 'error-line');
                     }
                     break;
             }
-            
-            // Display output lines with proper timing
-            let delay = 0;
-            outputLines.forEach((line, index) => {
-                let className = "";
-                if (line.type === 'system') className = 'system-line';
-                else if (line.type === 'success') className = 'success-line';
-                else if (line.type === 'error') className = 'error-line';
-                else className = 'output-line';
-                
-                addLine(line.text, delay, 20, className);
-                delay += 300;
-            });
-            
-            // Add cursor after all output is displayed
-            setTimeout(() => {
-                addCursorLine();
-            }, delay);
         }
 
         // Create virtual keyboard
@@ -598,6 +561,12 @@
                         
                         // Reset input buffer
                         inputBuffer = '';
+                        
+                        // Add new cursor line
+                        const newCursorLine = document.createElement('div');
+                        newCursorLine.style.marginTop = '10px';
+                        newCursorLine.innerHTML = '> <span class="cursor"></span>';
+                        terminalContent.appendChild(newCursorLine);
                     }
                     break;
                 case 'space':
@@ -644,7 +613,10 @@
             setTimeout(() => {
                 bootComplete = true;
                 addLine('', 0, 0, 'command-line'); // Add empty line for cursor
-                addCursorLine();
+                const cursorLine = document.createElement('div');
+                cursorLine.style.marginTop = '10px';
+                cursorLine.innerHTML = '> <span class="cursor"></span>';
+                terminalContent.appendChild(cursorLine);
             }, bootLines.length * 600);
         }
 
@@ -664,7 +636,10 @@
             addLine('Type "help" for available commands', 0, 20, 'system-line');
             
             // Add cursor
-            addCursorLine();
+            const cursorLine = document.createElement('div');
+            cursorLine.style.marginTop = '10px';
+            cursorLine.innerHTML = '> <span class="cursor"></span>';
+            terminalContent.appendChild(cursorLine);
             
             // Handle keyboard input
             document.addEventListener('keydown', (e) => {
@@ -699,6 +674,12 @@
                         
                         // Reset input buffer
                         inputBuffer = '';
+                        
+                        // Add new cursor line
+                        const newCursorLine = document.createElement('div');
+                        newCursorLine.style.marginTop = '10px';
+                        newCursorLine.innerHTML = '> <span class="cursor"></span>';
+                        terminalContent.appendChild(newCursorLine);
                     }
                 } 
                 // Handle backspace
